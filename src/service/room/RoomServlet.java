@@ -1,4 +1,4 @@
-package service;
+package service.room;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,29 +8,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class BasicServlet
+ * Servlet implementation class RoomServlet
  */
-@WebServlet("/Servlet")
-public class BasicServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public BasicServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    
-
+@WebServlet("/RoomServlet")
+public class RoomServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		// TODO Auto-generated method stub
 		super.init();
 	}
 
-
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public RoomServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
