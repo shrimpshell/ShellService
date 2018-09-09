@@ -4,17 +4,29 @@ import java.sql.Blob;
 
 public class Room {
 	private int id, price, roomQuantity, adultQuantity, childQuantity;
-	private String name, detail;
+	private String name, roomSize, bed;
 	private Blob image;
-	public Room(String name, String detail, int adultQuantity, int childQuantity, int roomQuantity, int price, Blob image) {
+	public Room(String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price) {
 		super();
 		this.price = price;
 		this.roomQuantity = roomQuantity;
 		this.adultQuantity = adultQuantity;
 		this.childQuantity = childQuantity;
 		this.name = name;
-		this.detail = detail;
-		this.image = image;
+		this.roomSize = roomSize;
+		this.bed = bed;
+	}
+	public String getRoomSize() {
+		return roomSize;
+	}
+	public void setRoomSize(String roomSize) {
+		this.roomSize = roomSize;
+	}
+	public String getBed() {
+		return bed;
+	}
+	public void setBed(String bed) {
+		this.bed = bed;
 	}
 	public int getId() {
 		return id;
@@ -59,10 +71,12 @@ public class Room {
 		this.name = name;
 	}
 	public String getDetail() {
-		return detail;
-	}
-	public void setDetail(String detail) {
-		this.detail = detail;
+		String str = "房間型號：" + this.getRoomSize() + "\n" +
+					"床型：" + this.getBed() + "\n" +
+					"大人人數：" + this.getAdultQuantity() + "\n" +
+					"小孩人數：" + this.getChildQuantity() + "\n" +
+					"定價：＄" + this.getPrice();
+		return "房間資訊\n" + str;
 	}
 	
 }

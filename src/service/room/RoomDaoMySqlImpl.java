@@ -133,13 +133,13 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				String name = rs.getString(1);
-				String detail = rs.getString(2);
-				int adult = rs.getInt(3);
-				int child = rs.getInt(4);
-				int roomNum = rs.getInt(5);
-				int price = rs.getInt(5);
-				Blob blob = null;
-				room = new Room(name, detail, adult, child, roomNum, price, blob);
+				String roomSize = rs.getString(2);
+				String bed = rs.getString(3);
+				int adult = rs.getInt(4);
+				int child = rs.getInt(5);
+				int roomNum = rs.getInt(6);
+				int price = rs.getInt(7);
+				room = new Room(name, roomSize, bed, adult, child, roomNum, price);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -172,13 +172,13 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				String name = rs.getString(1);
-				String detail = rs.getString(2);
-				int adult = rs.getInt(3);
-				int child = rs.getInt(4);
-				int roomNum = rs.getInt(5);
-				int price = rs.getInt(5);
-				Blob blob = null;
-				Room room = new Room(name, detail, adult, child, roomNum, price, blob);
+				String roomSize = rs.getString(2);
+				String bed = rs.getString(3);
+				int adult = rs.getInt(4);
+				int child = rs.getInt(5);
+				int roomNum = rs.getInt(6);
+				int price = rs.getInt(7);
+				Room room = new Room(name, roomSize, bed, adult, child, roomNum, price);
 				spotList.add(room);
 			}
 			return spotList;
