@@ -11,7 +11,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	public RoomDaoMySqlImpl() {
 		super();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -21,8 +21,8 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	public int insert(Room room, byte[] image) {
 		int count = 0;
 		String sql = "INSERT INTO RoomType" + 
-				"(RoomTypeName, Detail, AdultQuantity, ChildQuantity, RoomQuantity, Price, RoomPic)" +
-				"VALUES (? ? ? ? ? ? ?)";
+				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price)" +
+				"VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -30,12 +30,12 @@ public class RoomDaoMySqlImpl implements RoomDao {
 					Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, room.getName());
-			ps.setString(2, room.getDetail());
-			ps.setInt(3, room.getAdultQuantity());
-			ps.setInt(4, room.getChildQuantity());
-			ps.setInt(5, room.getRoomQuantity());
-			ps.setInt(6, room.getPrice());
-			ps.setBytes(7, image);
+			ps.setString(2, room.getRoomSize());
+			ps.setString(3, room.getBed());
+			ps.setInt(4, room.getAdultQuantity());
+			ps.setInt(5, room.getChildQuantity());
+			ps.setInt(6, room.getRoomQuantity());
+			ps.setInt(7, room.getPrice());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -57,7 +57,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	@Override
 	public int update(Room room, byte[] image) {
 		int count = 0;
-		String sql = "UPDATE RoomType SET RoomTypeName = ?, Detail = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ?, RoomPic = ? WHERE IdRoomType = ?;";
+		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSizse = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ? WHERE IdRoomType = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -65,12 +65,12 @@ public class RoomDaoMySqlImpl implements RoomDao {
 					Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, room.getName());
-			ps.setString(2, room.getDetail());
-			ps.setInt(3, room.getAdultQuantity());
-			ps.setInt(4, room.getChildQuantity());
-			ps.setInt(5, room.getRoomQuantity());
-			ps.setInt(6, room.getPrice());
-			ps.setBytes(7, image);
+			ps.setString(2, room.getRoomSize());
+			ps.setString(3, room.getBed());
+			ps.setInt(4, room.getAdultQuantity());
+			ps.setInt(5, room.getChildQuantity());
+			ps.setInt(6, room.getRoomQuantity());
+			ps.setInt(7, room.getPrice());
 			ps.setInt(8, room.getId());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
@@ -139,7 +139,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 				int child = rs.getInt(5);
 				int roomNum = rs.getInt(6);
 				int price = rs.getInt(7);
-				room = new Room(name, roomSize, bed, adult, child, roomNum, price);
+				room = new Room(0, name, roomSize, bed, adult, child, roomNum, price);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -178,7 +178,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 				int child = rs.getInt(5);
 				int roomNum = rs.getInt(6);
 				int price = rs.getInt(7);
-				Room room = new Room(name, roomSize, bed, adult, child, roomNum, price);
+				Room room = new Room(0, name, roomSize, bed, adult, child, roomNum, price);
 				spotList.add(room);
 			}
 			return spotList;

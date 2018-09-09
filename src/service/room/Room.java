@@ -6,7 +6,7 @@ public class Room {
 	private int id, price, roomQuantity, adultQuantity, childQuantity;
 	private String name, roomSize, bed;
 	private Blob image;
-	public Room(String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price) {
+	public Room(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price) {
 		super();
 		this.price = price;
 		this.roomQuantity = roomQuantity;
@@ -15,6 +15,7 @@ public class Room {
 		this.name = name;
 		this.roomSize = roomSize;
 		this.bed = bed;
+		this.id = id;
 	}
 	public String getRoomSize() {
 		return roomSize;
