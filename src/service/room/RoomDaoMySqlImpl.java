@@ -21,8 +21,8 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	public int insert(Room room, byte[] image) {
 		int count = 0;
 		String sql = "INSERT INTO RoomType" + 
-				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price)" +
-				"VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
+				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price, RoomPic)" +
+				"VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -36,6 +36,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			ps.setInt(5, room.getChildQuantity());
 			ps.setInt(6, room.getRoomQuantity());
 			ps.setInt(7, room.getPrice());
+			ps.setBytes(8, image != null ? image : null);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -57,13 +58,12 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	@Override
 	public int update(Room room, byte[] image) {
 		int count = 0;
-		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSize = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ? WHERE IdRoomType = ?;";
+		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSize = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ?, RoomPic = ? WHERE IdRoomType = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		
 		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, room.getName());
 			ps.setString(2, room.getRoomSize());
@@ -72,7 +72,8 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			ps.setInt(5, room.getChildQuantity());
 			ps.setInt(6, room.getRoomQuantity());
 			ps.setInt(7, room.getPrice());
-			ps.setInt(8, room.getId());
+			ps.setBytes(8, image != null ? image : null);
+			ps.setInt(9, room.getId());
 			count = ps.executeUpdate();
 			System.out.println(count);
 		} catch (SQLException e) {
@@ -199,6 +200,38 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			}
 		}
 		return spotList;
+	}
+
+	@Override
+	public byte[] getImage(int id) {
+		String sql = "SELECT RoomPic FROM RoomType WHERE IdRoomType = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		byte[] image = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return image;
 	}
 
 }

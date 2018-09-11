@@ -8,6 +8,8 @@ public interface RoomDao {
 	int update(Room spot, byte[] image);
 
 	int delete(int id);
+	
+	byte[] getImage(int id);
 
 	Room findById(int id);
 
