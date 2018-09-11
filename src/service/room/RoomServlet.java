@@ -47,20 +47,28 @@ public class RoomServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 		
 		if (action.equals("getAll")) {
-			List<Room> spots = roomDao.getAll();
-			writeText(response, gson.toJson(spots));
-		} else if (action.equals("roomInsert")) {
+			List<Room> rooms = roomDao.getAll();
+			writeText(response, gson.toJson(rooms));
+		} else if (action.equals("roomInsert") || action.equals("roomUpdate")) {
 			String spotJson = jsonObject.get("room").getAsString();
 			Room room = gson.fromJson(spotJson, Room.class);
+			
 //			String imageBase64 = jsonObject.get("imageBase64").getAsString();
 //			byte[] image = Base64.getMimeDecoder().decode(imageBase64);
+			
 			int count = 0;
 			if (action.equals("roomInsert")) {
 				count = roomDao.insert(room, null);
+			} else if (action.equals("roomUpdate")) {
+				count = roomDao.update(room, null);
+			} else if (action.equals("findById")) {
+				int id = jsonObject.get("id").getAsInt();
+				Room spot = roomDao.findById(id);
+				writeText(response, gson.toJson(spot));
+			} else {
+				writeText(response, "");
 			}
-//			else if (action.equals("spotUpdate")) {
-//				count = roomDao.update(spot, image);
-//			}
+			
 			writeText(response, String.valueOf(count));
 		}
 	}

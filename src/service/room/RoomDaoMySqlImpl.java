@@ -57,7 +57,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	@Override
 	public int update(Room room, byte[] image) {
 		int count = 0;
-		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSizse = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ? WHERE IdRoomType = ?;";
+		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSize = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ? WHERE IdRoomType = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -121,7 +121,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 
 	@Override
 	public Room findById(int id) {
-		String sql = "SELECT RoomTypeName, Detail, AdultQuantity, ChildQuantity, RoomQuantity, Price FROM RoomType WHERE IdRoomType = ?;";
+		String sql = "SELECT RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price FROM RoomType WHERE IdRoomType = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Room room = null;
@@ -160,8 +160,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 
 	@Override
 	public List<Room> getAll() {
-		String sql = "SELECT id, name, phoneNo, address, latitude, longitude "
-				+ "FROM Spot ORDER BY timestamp DESC;";
+		String sql = "SELECT RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price FROM RoomType";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Room> spotList = new ArrayList<Room>();
