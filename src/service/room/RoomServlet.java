@@ -46,6 +46,8 @@ public class RoomServlet extends HttpServlet {
 		
 		String action = jsonObject.get("action").getAsString();
 		
+		System.out.println(action);
+		
 		if (action.equals("getAll")) {
 			List<Room> rooms = roomDao.getAll();
 			writeText(response, gson.toJson(rooms));
@@ -61,14 +63,15 @@ public class RoomServlet extends HttpServlet {
 				count = roomDao.insert(room, null);
 			} else if (action.equals("roomUpdate")) {
 				count = roomDao.update(room, null);
-			} else if (action.equals("findById")) {
-				int id = jsonObject.get("id").getAsInt();
-				Room spot = roomDao.findById(id);
-				writeText(response, gson.toJson(spot));
 			} else {
 				writeText(response, "");
 			}
 			
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("roomRemove")) {
+			String roomJson = jsonObject.get("room").getAsString();
+			Room room = gson.fromJson(roomJson, Room.class);
+			int count = roomDao.delete(room.getId());
 			writeText(response, String.valueOf(count));
 		}
 	}

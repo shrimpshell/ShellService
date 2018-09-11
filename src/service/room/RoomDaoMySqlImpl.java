@@ -60,6 +60,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSize = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ? WHERE IdRoomType = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
+		
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
@@ -73,6 +74,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			ps.setInt(7, room.getPrice());
 			ps.setInt(8, room.getId());
 			count = ps.executeUpdate();
+			System.out.println(count);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -160,7 +162,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 
 	@Override
 	public List<Room> getAll() {
-		String sql = "SELECT RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price FROM RoomType";
+		String sql = "SELECT * FROM RoomType";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Room> spotList = new ArrayList<Room>();
@@ -170,14 +172,15 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				String name = rs.getString(1);
-				String roomSize = rs.getString(2);
-				String bed = rs.getString(3);
-				int adult = rs.getInt(4);
-				int child = rs.getInt(5);
-				int roomNum = rs.getInt(6);
-				int price = rs.getInt(7);
-				Room room = new Room(0, name, roomSize, bed, adult, child, roomNum, price);
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String roomSize = rs.getString(3);
+				String bed = rs.getString(4);
+				int adult = rs.getInt(5);
+				int child = rs.getInt(6);
+				int roomNum = rs.getInt(7);
+				int price = rs.getInt(8);
+				Room room = new Room(id, name, roomSize, bed, adult, child, roomNum, price);
 				spotList.add(room);
 			}
 			return spotList;
