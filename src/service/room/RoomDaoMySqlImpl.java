@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.Common;
+import service.event.Events;
 
 public class RoomDaoMySqlImpl implements RoomDao {
 
@@ -75,7 +76,6 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			ps.setBytes(8, image != null ? image : null);
 			ps.setInt(9, room.getId());
 			count = ps.executeUpdate();
-			System.out.println(count);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -96,7 +96,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	@Override
 	public int delete(int id) {
 		int count = 0;
-		String sql = "DELETE FROM RoomType WHERE IdRoomType = ?;";
+		String sql = "DELETE FROM RoomType WHERE IdRoomType = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -166,7 +166,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 		String sql = "SELECT * FROM RoomType";
 		Connection connection = null;
 		PreparedStatement ps = null;
-		List<Room> spotList = new ArrayList<Room>();
+		List<Room> roomList = new ArrayList<Room>();
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
@@ -182,9 +182,9 @@ public class RoomDaoMySqlImpl implements RoomDao {
 				int roomNum = rs.getInt(7);
 				int price = rs.getInt(8);
 				Room room = new Room(id, name, roomSize, bed, adult, child, roomNum, price);
-				spotList.add(room);
+				roomList.add(room);
 			}
-			return spotList;
+			return roomList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -199,7 +199,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 				e.printStackTrace();
 			}
 		}
-		return spotList;
+		return roomList;
 	}
 
 	@Override
@@ -232,6 +232,47 @@ public class RoomDaoMySqlImpl implements RoomDao {
 			}
 		}
 		return image;
+	}
+
+	@Override
+	public List<Room> getFive() {
+		String sql = "SELECT * FROM RoomType ORDER BY IdRoomType DESC LIMIT 5";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<Room> roomList = new ArrayList<Room>();
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String roomSize = rs.getString(3);
+				String bed = rs.getString(4);
+				int adult = rs.getInt(5);
+				int child = rs.getInt(6);
+				int roomNum = rs.getInt(7);
+				int price = rs.getInt(8);
+				Room room = new Room(id, name, roomSize, bed, adult, child, roomNum, price);
+				roomList.add(room);
+			}
+			return roomList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return roomList;
 	}
 
 }

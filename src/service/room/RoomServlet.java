@@ -52,6 +52,9 @@ public class RoomServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<Room> rooms = roomDao.getAll();
 			writeText(response, gson.toJson(rooms));
+		} else if (action.equals("getFive")) {
+			List<Room> rooms = roomDao.getFive();
+			writeText(response, gson.toJson(rooms));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("imageId").getAsInt();
