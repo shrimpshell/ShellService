@@ -32,8 +32,7 @@ public class EventDaoMySqlImpl implements EventDao {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, event.getName());
 			ps.setString(2, event.getDescription());
