@@ -1,4 +1,4 @@
-package service.event;
+package service.employee;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,18 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+
 @SuppressWarnings("serial")
-@WebServlet("/EventServlet")
-public class EventServlet extends HttpServlet {
+@WebServlet("/EmployeeServlet")
+public class EmployeeServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	EventDao eventDao = null;
+	EmployeeDao employeeDao = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (eventDao == null) {
-			eventDao = new EventDaoMySqlImpl();
+		if (employeeDao == null) {
+			employeeDao = new EmployeeDaoMySqlImpl();
 		}
-		List<Events> events = eventDao.getAll();
-		writeText(response, new Gson().toJson(events));
+		List<Employees> employees = employeeDao.getAll();
+		writeText(response, new Gson().toJson(employees));
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,48 +43,45 @@ public class EventServlet extends HttpServlet {
 		System.out.println("input: " + jsonIn);
 		
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
-		if (eventDao == null) {
-			eventDao = new EventDaoMySqlImpl();
+		if (employeeDao == null) {
+			employeeDao = new EmployeeDaoMySqlImpl();
 		}
 		
 		String action = jsonObject.get("action").getAsString();
 		if (action.equals("getAll")) {
-			List<Events> events = eventDao.getAll();
-			writeText(response, gson.toJson(events));
-		} else if (action.equals("getFive")) {
-			List<Events> events = eventDao.getFive();
+			List<Employees> events = employeeDao.getAll();
 			writeText(response, gson.toJson(events));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("imageId").getAsInt();
-			byte[] image = eventDao.getImage(id);
+			byte[] image = employeeDao.getImage(id);
 			if (image != null) {
 				response.setContentType("image/jpeg");
 				response.setContentLength(image.length);
 			}
 			os.write(image);
-		} else if (action.equals("eventInsert") || action.equals("eventUpdate")) {
-			String eventJson = jsonObject.get("event").getAsString();
-			Events event = gson.fromJson(eventJson, Events.class);
+		} else if (action.equals("employeeInsert") || action.equals("employeeUpdate")) {
+			String employeeJson = jsonObject.get("event").getAsString();
+			Employees employee = gson.fromJson(employeeJson, Employees.class);
 			
 			String imageBase64 = jsonObject.get("imageBase64").getAsString();
 			byte[] image = null;
 			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
 			
 			int count = 0;
-			if (action.equals("eventInsert")) {
-				count = eventDao.insert(event, image);
+			if (action.equals("employeeInsert")) {
+				count = employeeDao.insert(employee, image);
 				writeText(response, String.valueOf(count));
-			} else if (action.equals("eventUpdate")) {
-				count = eventDao.update(event, image);
+			} else if (action.equals("employeeUpdate")) {
+				count = employeeDao.update(employee, image);
 				writeText(response, String.valueOf(count));
 			} else {
 				writeText(response, "");
 			}
-		} else if (action.equals("eventRemove")) {
-			String eventJson = jsonObject.get("event").getAsString();
-			Events event = gson.fromJson(eventJson, Events.class);
-			int count = eventDao.delete(event.getEventId());
+		} else if (action.equals("employeeRemove")) {
+			String employeeJson = jsonObject.get("event").getAsString();
+			Employees employee = gson.fromJson(employeeJson, Employees.class);
+			int count = employeeDao.delete(employee.getId());
 			writeText(response, String.valueOf(count));
 		}
 	}

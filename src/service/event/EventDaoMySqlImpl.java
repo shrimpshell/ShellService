@@ -34,10 +34,6 @@ public class EventDaoMySqlImpl implements EventDao {
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
-			System.out.println(event.getName());
-			System.out.println(event.getDescription());
-			System.out.println(event.getStart());
-			System.out.println(event.getEnd());
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, event.getName());
 			ps.setString(2, event.getDescription());
@@ -65,7 +61,9 @@ public class EventDaoMySqlImpl implements EventDao {
 	@Override
 	public int update(Events event, byte[] image) {
 		int count = 0;
-		String sql = "UPDATE Events SET Events_Name = ?, Events_Description = ?, Events_Start_Datetime = ?, Events_End_Datetime = ?, Events_Pic = ? WHERE IdEvents = ?";
+		String sql = "UPDATE Events SET " +
+				"Events_Name = ?, Events_Description = ?, Events_Start_Datetime = ?, Events_End_Datetime = ?, Events_Pic = ? " +
+				"WHERE IdEvents = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
