@@ -26,7 +26,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 	public int insert(Employees employee, byte[] image) {
 		int count = 0;
 		String sql = "INSERT INTO Employee" +
-				"(IdEmployee, EmployeeCode, Name, Password, Email, Gender, Phone, Address, EmployeePic, isDeleted, IdDepartment)" +
+				"(IdEmployee, EmployeeCode, Name, Password, Email, Gendar, Phone, Adress, EmployeePic, isDeleted, IdDepartment)" +
 				"VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -64,11 +64,12 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 	public int update(Employees employee, byte[] image) {
 		int count = 0;
 		String sql = "UPDATE Employee SET " +
-				"EmployeeCode = ?, Name = ?, Password = ?, Email = ?, Gender = ?, " +
-				"Phone = ?, Address = ?, EmployeePic = ?, IdDepartment = ?" +
-				"WHERE IdEmployee = ?";
+				"EmployeeCode = ?, Name = ?, Password = ?, Email = ?, Gendar = ?, " +
+				"Phone = ?, Adress = ?, EmployeePic = ?, IdDepartment = ? " +
+				"WHERE IdEmployee = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
+		System.out.println(employee.getId());
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
@@ -203,7 +204,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public List<Employees> getAll() {
-		String sql = "SELECT * FROM Employee";
+		String sql = "SELECT * FROM Employee WHERE isDeleted = 0";
 		List<Employees> employeeList = new ArrayList<Employees>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -216,11 +217,8 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 				String code = rs.getString(2), name = rs.getString(3), 
 						password = rs.getString(4), email = rs.getString(5), gender = rs.getString(6),
 						phone = rs.getString(7), address = rs.getString(8);
-				int isDeleted = rs.getInt(10), departmentId = rs.getInt(11);
-				Blob image = rs.getBlob(10);
+				int departmentId = rs.getInt(11);
 				Employees employee = new Employees(id, code, name, password, email, gender, phone, address, departmentId);
-				employee.setIsDeleted(isDeleted);
-				employee.setImage(image);
 				employeeList.add(employee);
 			}
 			return employeeList;

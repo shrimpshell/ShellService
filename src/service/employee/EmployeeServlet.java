@@ -61,7 +61,7 @@ public class EmployeeServlet extends HttpServlet {
 			}
 			os.write(image);
 		} else if (action.equals("employeeInsert") || action.equals("employeeUpdate")) {
-			String employeeJson = jsonObject.get("event").getAsString();
+			String employeeJson = jsonObject.get("employee").getAsString();
 			Employees employee = gson.fromJson(employeeJson, Employees.class);
 			
 			String imageBase64 = jsonObject.get("imageBase64").getAsString();
@@ -79,8 +79,9 @@ public class EmployeeServlet extends HttpServlet {
 				writeText(response, "");
 			}
 		} else if (action.equals("employeeRemove")) {
-			String employeeJson = jsonObject.get("event").getAsString();
+			String employeeJson = jsonObject.get("employee").getAsString();
 			Employees employee = gson.fromJson(employeeJson, Employees.class);
+			System.out.println(employee.getId());
 			int count = employeeDao.delete(employee.getId());
 			writeText(response, String.valueOf(count));
 		}
