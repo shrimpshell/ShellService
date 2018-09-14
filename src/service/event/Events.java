@@ -4,15 +4,17 @@ import java.sql.Blob;
 
 public class Events {
 	private int eventId;
+	private float discount;
 	private String name, description, start, end;
 	private Blob image;
-	public Events(int eventId, String name, String description, String start, String end) {
+	public Events(int eventId, String name, String description, String start, String end, float discount) {
 		super();
 		this.eventId = eventId;
 		this.name = name;
 		this.description = description;
 		this.start = start;
 		this.end = end;
+		this.discount = discount;
 	}
 	public int getEventId() {
 		return eventId;
@@ -34,6 +36,9 @@ public class Events {
 	}
 	public void setImage(Blob image) {
 		this.image = image;
+	}
+	public float getDiscount() {
+		return discount;
 	}
 	
 	

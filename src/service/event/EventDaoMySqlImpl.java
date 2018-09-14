@@ -27,8 +27,8 @@ public class EventDaoMySqlImpl implements EventDao {
 	public int insert(Events event, byte[] image) {
 		int count = 0;
 		String sql = "INSERT INTO Events" +
-		"(IdEvents, Events_Name, Events_Description, Events_Start_Datetime, Events_End_Datetime, Events_Pic)" +
-		"VALUES (null, ?, ?, ?, ?, ?)";
+		"(IdEvents, Events_Name, Events_Description, Events_Start_Datetime, Events_End_Datetime, Events_Pic, Discount)" +
+		"VALUES (null, ?, ?, ?, ?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -39,6 +39,7 @@ public class EventDaoMySqlImpl implements EventDao {
 			ps.setDate(3, Date.valueOf(event.getStart()));
 			ps.setDate(4, Date.valueOf(event.getEnd()));
 			ps.setBytes(5, image != null ? image : null);
+			ps.setFloat(6, event.getDiscount());
 			count = ps.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -61,7 +62,7 @@ public class EventDaoMySqlImpl implements EventDao {
 	public int update(Events event, byte[] image) {
 		int count = 0;
 		String sql = "UPDATE Events SET " +
-				"Events_Name = ?, Events_Description = ?, Events_Start_Datetime = ?, Events_End_Datetime = ?, Events_Pic = ? " +
+				"Events_Name = ?, Events_Description = ?, Events_Start_Datetime = ?, Events_End_Datetime = ?, Events_Pic = ?, Discount = ? " +
 				"WHERE IdEvents = ?";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -73,7 +74,8 @@ public class EventDaoMySqlImpl implements EventDao {
 			ps.setDate(3, Date.valueOf(event.getStart()));
 			ps.setDate(4, Date.valueOf(event.getEnd()));
 			ps.setBytes(5, image != null ? image : null);
-			ps.setInt(6, event.getEventId());
+			ps.setFloat(6, event.getDiscount());
+			ps.setInt(7, event.getEventId());
 			count = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,7 +155,7 @@ public class EventDaoMySqlImpl implements EventDao {
 
 	@Override
 	public Events findById(int id) {
-		String sql = "SELECT Events_Name, Events_Description, Events_Start_Datetime, Events_End_Datetime FROM Events WHERE IdEvents = ?";
+		String sql = "SELECT Events_Name, Events_Description, Events_Start_Datetime, Events_End_Datetime, Discount FROM Events WHERE IdEvents = ?";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Events event = null;
@@ -166,11 +168,12 @@ public class EventDaoMySqlImpl implements EventDao {
 			if (rs.next()) {
 				String name = rs.getString(2), description = rs.getString(5);
 				Date start = rs.getDate(3), end = rs.getDate(4);
+				float discount = rs.getFloat(8);
 				@SuppressWarnings("deprecation")
 				String startStr = start.getYear() + "-" + ((start.getMonth() + 1) < 10 ?  "0" + (start.getMonth() + 1) : (start.getMonth() + 1)) + start.getDate();
 				@SuppressWarnings("deprecation")
 				String endStr = end.getYear() + "-" + ((end.getMonth() + 1) < 10 ?  "0" + (end.getMonth() + 1) : (end.getMonth() + 1)) + end.getDate();
-				event = new Events(id, name, description, startStr, endStr);
+				event = new Events(id, name, description, startStr, endStr, discount);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -204,11 +207,12 @@ public class EventDaoMySqlImpl implements EventDao {
 				int id = rs.getInt(1);
 				String name = rs.getString(2), description = rs.getString(5);
 				Date start = rs.getDate(3), end = rs.getDate(4);
+				float discount = rs.getFloat(8);
 				@SuppressWarnings("deprecation")
 				String startStr = (1900 + start.getYear()) + "-" + ((start.getMonth() + 1) < 10 ?  "0" + (start.getMonth() + 1) : (start.getMonth() + 1)) + "-" + start.getDate();
 				@SuppressWarnings("deprecation")
 				String endStr = (1900 + end.getYear()) + "-" + ((end.getMonth() + 1) < 10 ?  "0" + (end.getMonth() + 1) : (end.getMonth() + 1)) + "-" + end.getDate();
-				Events event = new Events(id, name, description, startStr, endStr);
+				Events event = new Events(id, name, description, startStr, endStr, discount);
 				eventList.add(event);
 			}
 			return eventList;
@@ -243,11 +247,12 @@ public class EventDaoMySqlImpl implements EventDao {
 				int id = rs.getInt(1);
 				String name = rs.getString(2), description = rs.getString(5);
 				Date start = rs.getDate(3), end = rs.getDate(4);
+				float discount = rs.getFloat(8);
 				@SuppressWarnings("deprecation")
 				String startStr = (1900 + start.getYear()) + "-" + ((start.getMonth() + 1) < 10 ?  "0" + (start.getMonth() + 1) : (start.getMonth() + 1)) + "-" + start.getDate();
 				@SuppressWarnings("deprecation")
 				String endStr = (1900 + end.getYear()) + "-" + ((end.getMonth() + 1) < 10 ?  "0" + (end.getMonth() + 1) : (end.getMonth() + 1)) + "-" + end.getDate();
-				Events event = new Events(id, name, description, startStr, endStr);
+				Events event = new Events(id, name, description, startStr, endStr, discount);
 				eventList.add(event);
 			}
 			return eventList;
