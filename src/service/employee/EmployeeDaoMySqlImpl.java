@@ -239,4 +239,35 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 		return employeeList;
 	}
 
+	@Override
+	public boolean employeeValid(String employCode, String password) {
+		String sql = "SELECT IdEmployee FROM Employee WHERE EmployCode = ? AND Password = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		boolean isLogin = false;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, employCode);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			isLogin = rs.next();
+			return isLogin;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return isLogin;
+	}
+
 }

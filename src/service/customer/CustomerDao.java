@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CustomerDao {
 	
-	boolean userValid(String customerID, String password);
+	int userValid(String customerID, String password);
 
 	boolean userExist(String email);
 
@@ -16,7 +16,7 @@ public interface CustomerDao {
 	
 	int updateImage(Customer customer);
 
-	Customer findById(int IdCustomer);
+	Customer findById (int idCustomer);
 
 	List<Customer> getAll();
 

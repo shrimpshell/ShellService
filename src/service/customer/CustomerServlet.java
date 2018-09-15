@@ -42,7 +42,7 @@ public class CustomerServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 		//user登入方法
 		if(action.equals("userValid")) {
-			String customerID = jsonObject.get("CustomerID").getAsString();
+			String customerID = jsonObject.get("customerID").getAsString();
 			String password = jsonObject.get("password").getAsString();
 			writeText(response, String.valueOf(customerDao.userValid(customerID, password)));
 		//檢查申請帳號是否重複
@@ -66,7 +66,7 @@ public class CustomerServlet extends HttpServlet {
 		//用id尋找會員資料
 		}else if(action.equals("findById")) {
 			int IdCustomer = jsonObject.get("IdCustomer").getAsInt();
-			Customer customer = customerDao.findById(IdCustomer);
+			 Customer customer = customerDao.findById(IdCustomer);
 			writeText(response, String.valueOf(IdCustomer));
 		//刪除會員資料
 		}else if(action.equals("delete")) {

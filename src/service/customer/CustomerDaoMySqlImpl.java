@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import common.ChangeDate;
 import common.Common;
 
@@ -28,20 +27,22 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public boolean userValid(String customerID, String password) {
-		String sql = "SELECT idCustomer FROM Customer WHERE CustomerID = ? AND password = ?;";
+	public int userValid(String customerID, String password) {
+		String sql = "SELECT IdCustomer FROM Customer WHERE CustomerID = ? AND Password = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
-		boolean isLogin = false;
+		int idCustomer = 0;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, customerID);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
-			isLogin = rs.next();
-			return isLogin;
-		} catch (SQLException e) {
+			if (rs.next()) {
+				idCustomer = rs.getInt(1);
+				return idCustomer;
+			}
+		}catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -55,13 +56,13 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 				e.printStackTrace();
 			}
 		}
-		return isLogin;
+		return idCustomer;
 	}
 	
 
 	@Override
 	public boolean userExist(String email) {
-		String sql = "SELECT email FROM Customer WHERE email = ?;";
+		String sql = "SELECT Email FROM Customer WHERE Email = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		boolean isCustomerIdExist = false;
@@ -194,7 +195,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public Customer findById(int IdCustomer) {
+	public Customer findById(int idCustomer) {
 		String sql = "SELECT Name, Email, Birthday, Phone, Address "
 				+ "FROM Customer WHERE IdCustomer = ?";
 		Connection connectio = null;
@@ -204,14 +205,15 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 			connectio = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
 			ps = connectio.prepareStatement(sql);
-			ps.setInt(1, IdCustomer);
+			ps.setInt(1, idCustomer);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				String Name = rs.getString(1); 
 				String Email = rs.getString(2);
 				String Birthday = ChangeDate.getDateToStr(rs.getDate(3));
-				String Pphone = rs.getString(4);
+				String Phone = rs.getString(4);
 				String Address = rs.getString(5);
+				customer = new Customer(idCustomer, Name, Email, Birthday, Phone, Address);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

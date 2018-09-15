@@ -69,7 +69,11 @@ public class EmployeeServlet extends HttpServlet {
 			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
 			
 			int count = 0;
-			if (action.equals("employeeInsert")) {
+			if(action.equals("employeeValid")) {
+				String employCode = jsonObject.get("employCode").getAsString();
+				String password = jsonObject.get("password").getAsString();
+				writeText(response, String.valueOf(employeeDao.employeeValid(employCode, password)));	
+			}else if (action.equals("employeeInsert")) {
 				count = employeeDao.insert(employee, image);
 				writeText(response, String.valueOf(count));
 			} else if (action.equals("employeeUpdate")) {
