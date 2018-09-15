@@ -196,7 +196,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 
 	@Override
 	public Customer findById(int IdCustomer) {
-		String sql = "SELECT Name, Email, Birthday, Phone, Address "
+		String sql = "SELECT Name, Email, Password, Birthday, Phone, Address "
 				+ "FROM Customer WHERE IdCustomer = ?;";
 		Connection connectio = null;
 		PreparedStatement ps = null;
@@ -210,10 +210,11 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 			if (rs.next()) {
 				String Name = rs.getString(1); 
 				String Email = rs.getString(2);
-				String Birthday = ChangeDate.getDateToStr(rs.getDate(3));
-				String Phone = rs.getString(4);
-				String Address = rs.getString(5);
-				customer = new Customer(IdCustomer, Name, Email, Birthday, Phone, Address);
+				String Password = rs.getString(3);
+				String Birthday = ChangeDate.getDateToStr(rs.getDate(4));
+				String Phone = rs.getString(5);
+				String Address = rs.getString(6);
+				customer = new Customer(IdCustomer, Name, Email, Password, Birthday, Phone, Address);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

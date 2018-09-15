@@ -37,12 +37,13 @@ public class Customer {
 		this.Address = Address;
 	}
 	
-	public Customer(int IdCustomer, String Name, String Email, String Birthday, 
+	public Customer(int IdCustomer, String Name, String Email, String Password, String Birthday, 
 			String Phone, String Address){
 		super();
 		this.IdCustomer = IdCustomer;
 		this.Name = Name;
 		this.Email = Email;
+		this.Password = Password;
 		this.Birthday = Birthday;
 		this.Phone = Phone;
 		this.Address = Address;
