@@ -1,15 +1,26 @@
 package server.ws;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/websocketendpoint")
+import com.google.gson.Gson;
+
+@ServerEndpoint("/Services/{userName}")
 public class WsServer {
+	private static Map<String, Session> sessionsMap = new ConcurrentHashMap<>();
+	Gson gson = new Gson();
+	
 	@OnOpen
-	public void onOpen(){
+	public void onOpen(@PathParam("userName") String userName, Session userSession) throws IOException {
 		System.out.println("Open Connection ...");
 	}
 	
