@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import service.employee.Employees;
 
 
 
@@ -65,9 +64,9 @@ public class CustomerServlet extends HttpServlet {
 			byte[] image = Base64.getMimeDecoder().decode(imageBase64);
 		//用id尋找會員資料
 		}else if(action.equals("findById")) {
-			int IdCustomer = jsonObject.get("IdCustomer").getAsInt();
-			 Customer customer = customerDao.findById(IdCustomer);
-			writeText(response, String.valueOf(IdCustomer));
+			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
+			Customer customer = customerDao.findById(Integer.valueOf(IdCustomer));
+			writeText(response, gson.toJson(customer));
 		//刪除會員資料
 		}else if(action.equals("delete")) {
 			String spotJson = jsonObject.get("customer").getAsString();

@@ -195,9 +195,9 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public Customer findById(int idCustomer) {
+	public Customer findById(int IdCustomer) {
 		String sql = "SELECT Name, Email, Birthday, Phone, Address "
-				+ "FROM Customer WHERE IdCustomer = ?";
+				+ "FROM Customer WHERE IdCustomer = ?;";
 		Connection connectio = null;
 		PreparedStatement ps = null;
 		Customer customer = null;
@@ -205,7 +205,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 			connectio = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
 			ps = connectio.prepareStatement(sql);
-			ps.setInt(1, idCustomer);
+			ps.setInt(1, IdCustomer);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				String Name = rs.getString(1); 
@@ -213,9 +213,9 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 				String Birthday = ChangeDate.getDateToStr(rs.getDate(3));
 				String Phone = rs.getString(4);
 				String Address = rs.getString(5);
-				customer = new Customer(idCustomer, Name, Email, Birthday, Phone, Address);
+				customer = new Customer(IdCustomer, Name, Email, Birthday, Phone, Address);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {

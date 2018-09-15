@@ -64,6 +64,14 @@ public class Customer {
 		this.CustomerPic = customerPic;
 	}
 	
+	public Customer (String name, String email, String birthday, String phone, String address) {
+		this.Name = name;
+		this.Email = email;
+		this.Birthday = birthday;
+		this.Phone = phone;
+		this.Address = address;
+	}
+	
 	public String getCustomerID() {
 		return CustomerID;
 	}
