@@ -1,10 +1,17 @@
 package server.ws;
 
+<<<<<<< HEAD
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.*;
 import java.io.*;
 
 import javax.websocket.CloseReason;
+=======
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+>>>>>>> ebbc77328578bbf2f8600806d96821ae473ef1db
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -15,6 +22,7 @@ import javax.websocket.server.ServerEndpoint;
 
 import com.google.gson.Gson;
 
+<<<<<<< HEAD
 import server.ws.ChatMessage;
 import server.ws.StateMessage;
 
@@ -54,6 +62,16 @@ public class WsServer {
 			receiverSession.getAsyncRemote().sendText(message);
 		}
 		System.out.println("Message received: " + message);
+=======
+@ServerEndpoint("/Services/{userName}")
+public class WsServer {
+	private static Map<String, Session> sessionsMap = new ConcurrentHashMap<>();
+	Gson gson = new Gson();
+	
+	@OnOpen
+	public void onOpen(@PathParam("userName") String userName, Session userSession) throws IOException {
+		System.out.println("Open Connection ...");
+>>>>>>> ebbc77328578bbf2f8600806d96821ae473ef1db
 	}
 
 		
