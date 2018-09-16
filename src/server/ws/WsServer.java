@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -25,19 +26,19 @@ public class WsServer {
 	}
 	
 	@OnClose
-	public void onClose(){
+	public void onClose(Session userSession, CloseReason reason) {
 		System.out.println("Close Connection ...");
 	}
 	
 	@OnMessage
-	public String onMessage(String message){
+	public String onMessage(Session userSession, String message) {
 		System.out.println("Message from the client: " + message);
 		String echoMsg = "Echo from the server : " + message;
 		return echoMsg;
 	}
 
 	@OnError
-	public void onError(Throwable e){
-		e.printStackTrace();
+	public void onError(Session userSession, Throwable e) {
+		System.out.println("Error: " + e.toString());
 	}
 }
