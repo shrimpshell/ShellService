@@ -167,7 +167,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	@Override
 	public int delete(int idCustomer) {
 		int count = 0;
-		String sql = "UPDATE Employee SET " +
+		String sql = "UPDATE Customer SET " +
 				"isDeleted = 1 " +
 				"WHERE IdCustomer = ?";
 		Connection connection = null;
@@ -198,13 +198,13 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	public Customer findById(int IdCustomer) {
 		String sql = "SELECT Name, Email, Password, Birthday, Phone, Address "
 				+ "FROM Customer WHERE IdCustomer = ?;";
-		Connection connectio = null;
+		Connection connection = null;
 		PreparedStatement ps = null;
 		Customer customer = null;
 		try {
-			connectio = DriverManager.getConnection(Common.URL, Common.USERNAME,
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
-			ps = connectio.prepareStatement(sql);
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, IdCustomer);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -223,8 +223,8 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 				if (ps != null) {
 					ps.close();
 				}
-				if (connectio != null) {
-					connectio.close();
+				if (connection != null) {
+					connection.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
