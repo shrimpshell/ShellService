@@ -1,14 +1,14 @@
 package service.customer.payDetail;
 
 public class OrderDetail {
-	private String RoomNumber;
-	private String RoomLevel;
-	private String RoomType;
-	private String Price;
-	private String DiningTypeName;
-	private String Quantity;
-	private String dtPrice;
-	private String Discount;
+	private String roomNumber;// 房號Ø
+	private String roomLevel;// 房間等級
+	private String roomType;// 房型名稱
+	private String price;// 房間價格
+	private String diningTypeName;// 餐點名稱
+	private String quantity;// 餐點數量
+	private String dtPrice;// 餐點價格
+	private String discount;// 訂房時有在優惠活動範圍內的折扣,也可能沒有
 
 	public OrderDetail() {
 		super();
@@ -16,63 +16,62 @@ public class OrderDetail {
 
 	public OrderDetail(String roomNumber, String roomLevel, String roomType, String price, String diningTypeName,
 			String quantity, String dtPrice, String discount) {
-		super();
-		RoomNumber = roomNumber;
-		RoomLevel = roomLevel;
-		RoomType = roomType;
-		Price = price;
-		DiningTypeName = diningTypeName;
-		Quantity = quantity;
+		this.roomNumber = roomNumber;
+		this.roomLevel = roomLevel;
+		this.roomType = roomType;
+		this.price = price;
+		this.diningTypeName = diningTypeName;
+		this.quantity = quantity;
 		this.dtPrice = dtPrice;
-		Discount = discount;
+		this.discount = discount;
 	}
-
+	
 	public String getRoomNumber() {
-		return RoomNumber;
+		return roomNumber;
 	}
 
 	public void setRoomNumber(String roomNumber) {
-		RoomNumber = roomNumber;
+		this.roomNumber = roomNumber;
 	}
 
 	public String getRoomLevel() {
-		return RoomLevel;
+		return roomLevel;
 	}
 
 	public void setRoomLevel(String roomLevel) {
-		RoomLevel = roomLevel;
+		this.roomLevel = roomLevel;
 	}
 
 	public String getRoomType() {
-		return RoomType;
+		return roomType;
 	}
 
 	public void setRoomType(String roomType) {
-		RoomType = roomType;
+		this.roomType = roomType;
 	}
 
 	public String getPrice() {
-		return Price;
+		return price;
 	}
 
 	public void setPrice(String price) {
-		Price = price;
+		this.price = price;
 	}
 
 	public String getDiningTypeName() {
-		return DiningTypeName;
+		return diningTypeName;
 	}
 
 	public void setDiningTypeName(String diningTypeName) {
-		DiningTypeName = diningTypeName;
+		this.diningTypeName = diningTypeName;
 	}
 
 	public String getQuantity() {
-		return Quantity;
+		return quantity;
 	}
 
 	public void setQuantity(String quantity) {
-		Quantity = quantity;
+		this.quantity = quantity;
 	}
 
 	public String getDtPrice() {
@@ -84,12 +83,11 @@ public class OrderDetail {
 	}
 
 	public String getDiscount() {
-		return Discount;
+		return discount;
 	}
 
 	public void setDiscount(String discount) {
-		Discount = discount;
+		this.discount = discount;
 	}
 
-	
 }

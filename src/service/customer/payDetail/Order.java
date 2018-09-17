@@ -3,45 +3,56 @@ package service.customer.payDetail;
 import java.util.List;
 
 public class Order {
-	private int IdRoomReservation;
-	private String CheckInDate;
-	private String CheckOuntDate;
+	private int idRoomReservation;
+	private String checkInDate;
+	private String checkOuntDate;
+	private String roomReservationStatus;
 	private List<OrderDetail> orderDetailList;
 
 	public Order() {
 		super();
 	}
 
-	public Order(int idRoomReservation, String checkInDate, String checkOuntDate, List<OrderDetail> orderDetailList) {
+	public Order(int idRoomReservation, String checkInDate, String checkOuntDate, String roomReservationStatus,
+			List<OrderDetail> orderDetailList) {
 		super();
-		IdRoomReservation = idRoomReservation;
-		CheckInDate = checkInDate;
-		CheckOuntDate = checkOuntDate;
+		this.idRoomReservation = idRoomReservation;
+		this.checkInDate = checkInDate;
+		this.checkOuntDate = checkOuntDate;
+		this.roomReservationStatus = roomReservationStatus;
 		this.orderDetailList = orderDetailList;
 	}
 
 	public int getIdRoomReservation() {
-		return IdRoomReservation;
+		return idRoomReservation;
 	}
 
 	public void setIdRoomReservation(int idRoomReservation) {
-		IdRoomReservation = idRoomReservation;
+		this.idRoomReservation = idRoomReservation;
 	}
 
 	public String getCheckInDate() {
-		return CheckInDate;
+		return checkInDate;
 	}
 
 	public void setCheckInDate(String checkInDate) {
-		CheckInDate = checkInDate;
+		this.checkInDate = checkInDate;
 	}
 
 	public String getCheckOuntDate() {
-		return CheckOuntDate;
+		return checkOuntDate;
 	}
 
 	public void setCheckOuntDate(String checkOuntDate) {
-		CheckOuntDate = checkOuntDate;
+		this.checkOuntDate = checkOuntDate;
+	}
+
+	public String getRoomReservationStatus() {
+		return roomReservationStatus;
+	}
+
+	public void setRoomReservationStatus(String roomReservationStatus) {
+		this.roomReservationStatus = roomReservationStatus;
 	}
 
 	public List<OrderDetail> getOrderDetailList() {
@@ -51,7 +62,5 @@ public class Order {
 	public void setOrderDetailList(List<OrderDetail> orderDetailList) {
 		this.orderDetailList = orderDetailList;
 	}
-
-	
 
 }
