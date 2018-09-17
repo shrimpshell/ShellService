@@ -7,7 +7,7 @@ public class Rating {
 	int IdRating, IdRoomReservation, IdCustomer;
 	Float ratingStar;
 	String opinion, review;
-	private List<RatingDetail> ratingDetailList;
+//	private List<RatingDetail> ratingDetailList;
 	
 	public Rating() {
 		super();
@@ -77,13 +77,13 @@ public class Rating {
 		this.review = review;
 	}
 
-	public List<RatingDetail> getRatingDetailList() {
-		return ratingDetailList;
-	}
-
-	public void setRatingDetailList(List<RatingDetail> ratingDetailList) {
-		this.ratingDetailList = ratingDetailList;
-	}
+//	public List<RatingDetail> getRatingDetailList() {
+//		return ratingDetailList;
+//	}
+//
+//	public void setRatingDetailList(List<RatingDetail> ratingDetailList) {
+//		this.ratingDetailList = ratingDetailList;
+//	}
 	
 
 }

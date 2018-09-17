@@ -25,14 +25,14 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	@Override
 	public Rating findById(int IdRoomReservation) {
 		RoomReservation master = findMasterById(IdRoomReservation);
-		RatingDetail detail = findDetailById(IdRoomReservation);
+//		RatingDetail detail = findDetailById(IdRoomReservation);
 		Rating rating = new Rating(IdRoomReservation, master.getIdCustomer());
 		return rating;
 	}
-	private RatingDetail findDetailById(int idRoomReservation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	private RatingDetail findDetailById(int idRoomReservation) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	private RoomReservation findMasterById(int idRoomReservation) {
 		// TODO Auto-generated method stub
