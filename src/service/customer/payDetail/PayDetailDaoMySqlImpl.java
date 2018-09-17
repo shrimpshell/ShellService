@@ -42,7 +42,8 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 						"dt.DiningTypeName, " + 
 						"ds.Quantity, " + 
 						"dt.Price as dtPrice, " + 
-						"( select Discount from RoomReservation,Events Where RoomReservation.CheckInDate between Events_Start_Datetime and Events_End_Datetime) AS Discount " + 
+						"( select Discount from RoomReservation,Events Where RoomReservation.CheckInDate between Events_Start_Datetime and Events_End_Datetime) AS Discount, "+ 
+						"rr.RoomReservationStatus " + 
 						"from RoomReservation as rr " + 
 						"left join RoomType as rt " + 
 						"on rr.IdRoomType = rt.IdRoomType " + 
@@ -70,12 +71,13 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				String quantity = String.valueOf(rs.getInt(9));
 				String dtPrice = String.valueOf(rs.getInt(10));
 				String discount = String.valueOf(rs.getFloat(11));
+				String roomReservationStatus = rs.getString(12);
 				
 				OrderDetail detail = new OrderDetail(roomNumber, roomLevel, roomType, price, diningTypeName,
 						quantity, dtPrice, discount);
 				orderDetailList.add(detail);
 				Order order = new Order(idRoomReservation, checkInDate,
-						checkOuntDate,orderDetailList);
+						checkOuntDate,roomReservationStatus,orderDetailList);
 				orderList.add(order);
 			}
 		} catch (SQLException e) {
@@ -93,6 +95,38 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			}
 		}
 		return orderList;
+	}
+
+	@Override
+	public int updateRoomReservationStatusById(String roomReservationStatus, String idRoomReservation ) {
+		int count = 0;
+		String sql = "UPDATE RoomReservation SET RoomReservationStatus = ? WHERE idRoomReservation = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, roomReservationStatus);
+			ps.setInt(2, Integer.parseInt(idRoomReservation));
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					// When a Statement object is closed,
+					// its current ResultSet object is also closed
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 	
 }
