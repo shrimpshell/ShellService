@@ -56,11 +56,10 @@ public class RatingServlet extends HttpServlet {
 			Rating rating = gson.fromJson(jsonObject.get("rating")
 					.getAsString(), Rating.class);
 			writeText(response, String.valueOf(ratingDao.updateReview(rating)));
-		//尋找Customer評論
-//		}else if(action.equals("findById")) {
-//			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
-//			Customer customer = ratingDao.findById(Integer.valueOf(IdCustomer));
-//			writeText(response, gson.toJson(customer));
+		}else if(action.equals("findById")) {
+			String IdRoomReservation = jsonObject.get("IdRoomReservation").getAsString();
+			Rating rating = ratingDao.findById(Integer.valueOf(IdRoomReservation));
+			writeText(response, gson.toJson(rating));
 		}else if(action.equals("delete")) {
 			String ratingJson = jsonObject.get("rating").getAsString();
 			Rating rating = gson.fromJson(ratingJson, Rating.class);

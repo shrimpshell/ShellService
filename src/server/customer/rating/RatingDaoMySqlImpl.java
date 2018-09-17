@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import common.ChangeDate;
 import common.Common;
+import service.customer.Customer;
 
 
 
@@ -24,21 +27,38 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	
 	@Override
 	public Rating findById(int IdRoomReservation) {
-		RoomReservation master = findMasterById(IdRoomReservation);
-//		RatingDetail detail = findDetailById(IdRoomReservation);
-		Rating rating = new Rating(IdRoomReservation, master.getIdCustomer());
+		String sql = "SELECT ratingStar, opinion"
+				+ "FROM Rating WHERE IdRoomReservation = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		Rating rating= null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, IdRoomReservation);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				Float ratingStar = rs.getFloat(1); 
+				String opinion = rs.getString(2);
+		 rating = new Rating(IdRoomReservation, ratingStar, opinion);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return rating;
 	}
-//	private RatingDetail findDetailById(int idRoomReservation) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-	private RoomReservation findMasterById(int idRoomReservation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 
 	@Override
 	public int ratingInsert(Rating rating) {
@@ -76,7 +96,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	@Override
 	public int updateOpinion(Rating rating) {
 		String sql = "UPDATE Rating "
-				+ "SET ratingStar = ?, opinion = ? WHERE IdRating = ?;";
+				+ "SET ratingStar = ?, opinion = ? WHERE IdRoomReservation = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		int count = 0;
@@ -86,7 +106,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 			ps = connection.prepareStatement(sql);
 			ps.setFloat(1, rating.getRatingStar());
 			ps.setString(2, rating.getOpinion());
-			ps.setInt(3, rating.getIdRating());
+			ps.setInt(3, rating.getIdRoomReservation());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

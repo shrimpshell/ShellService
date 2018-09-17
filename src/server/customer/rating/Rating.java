@@ -36,6 +36,12 @@ public class Rating {
 		this.IdRoomReservation = idRoomReservation;
 		this.IdCustomer = IdCustomer;
 	}
+	
+	public Rating(int IdRoomReservation, Float ratingStar, String opinion) {
+		this.IdRoomReservation = IdRoomReservation;
+		this.ratingStar = ratingStar;
+		this.opinion = opinion;
+	}
 
 	public int getIdRating() {
 		return IdRating;
