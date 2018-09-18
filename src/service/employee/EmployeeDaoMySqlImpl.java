@@ -270,4 +270,69 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 		return isLogin;
 	}
 
+	@Override
+	public int userValid(String email, String password) {
+		String sql = "SELECT IdEmployee FROM Employee WHERE Email = ? AND Password = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		int idEmployee = 0;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, email);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				idEmployee = rs.getInt(1);
+				return idEmployee;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return idEmployee;
+	}
+
+	@Override
+	public boolean userExist(String email) {
+		String sql = "SELECT Email FROM Employee WHERE Email = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		boolean isEmployeeIdExist = false;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			isEmployeeIdExist = rs.next();
+			return isEmployeeIdExist;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return isEmployeeIdExist;
+	}
+
+	
+
 }

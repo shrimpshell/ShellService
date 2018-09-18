@@ -48,7 +48,14 @@ public class EmployeeServlet extends HttpServlet {
 		}
 		
 		String action = jsonObject.get("action").getAsString();
-		if (action.equals("getAll")) {
+		if(action.equals("employeeValid")) {
+			String email = jsonObject.get("email").getAsString();
+			String password = jsonObject.get("password").getAsString();
+			writeText(response, String.valueOf(employeeDao.userValid(email, password)));
+		} else if(action.equals("userExist")) {
+			String email = jsonObject.get("email").getAsString();
+			writeText(response, String.valueOf(employeeDao.userExist(email)));
+		} else if (action.equals("getAll")) {
 			List<Employees> events = employeeDao.getAll();
 			writeText(response, gson.toJson(events));
 		} else if (action.equals("getImage")) {
