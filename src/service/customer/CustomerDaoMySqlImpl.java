@@ -27,15 +27,15 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public int userValid(String customerID, String password) {
-		String sql = "SELECT IdCustomer FROM Customer WHERE CustomerID = ? AND Password = ?;";
+	public int userValid(String email, String password) {
+		String sql = "SELECT IdCustomer FROM Customer WHERE Email = ? AND Password = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		int idCustomer = 0;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, customerID);
+			ps.setString(1, email);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {

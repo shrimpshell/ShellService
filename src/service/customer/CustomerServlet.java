@@ -41,9 +41,9 @@ public class CustomerServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 		//user登入方法
 		if(action.equals("userValid")) {
-			String customerID = jsonObject.get("customerID").getAsString();
+			String email = jsonObject.get("email").getAsString();
 			String password = jsonObject.get("password").getAsString();
-			writeText(response, String.valueOf(customerDao.userValid(customerID, password)));
+			writeText(response, String.valueOf(customerDao.userValid(email, password)));
 		//檢查申請帳號是否重複
 		}else if(action.equals("userExist")) {
 			String email = jsonObject.get("email").getAsString();
