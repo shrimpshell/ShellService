@@ -60,7 +60,7 @@ public class EmployeeServlet extends HttpServlet {
 			writeText(response, gson.toJson(events));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
-			int id = jsonObject.get("imageId").getAsInt();
+			int id = jsonObject.get("IdEmployee").getAsInt();
 			byte[] image = employeeDao.getImage(id);
 			if (image != null) {
 				response.setContentType("image/jpeg");
@@ -94,6 +94,20 @@ public class EmployeeServlet extends HttpServlet {
 			Employees employee = gson.fromJson(employeeJson, Employees.class);
 			System.out.println(employee.getId());
 			int count = employeeDao.delete(employee.getId());
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("findById")) {
+			int idEmployee = jsonObject.get("idEmployee").getAsInt();
+			Employees employee = employeeDao.findById(idEmployee);
+			writeText(response, gson.toJson(employee));
+		} else if (action.equals("updateImage")) {
+			int idEmployee = jsonObject.get("idEmployee").getAsInt();
+			
+			String imageBase64 = jsonObject.get("imageBase64").getAsString();
+			byte[] image = null;
+			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
+			
+			int count = 0;
+			count = employeeDao.updateImage(idEmployee, image);
 			writeText(response, String.valueOf(count));
 		}
 	}
