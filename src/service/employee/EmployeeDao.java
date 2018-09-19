@@ -8,11 +8,13 @@ public interface EmployeeDao {
 
 	boolean userExist(String email);
 	
-	boolean employeeValid(String employCode, String password);
+	boolean employeeValid(String email, String password);
 	
 	int insert(Employees employee, byte[] image);
 	
 	int update(Employees employee, byte[] image);
+	
+	int updateImage(int IdEmployee, byte[] image);
 	
 	int delete(int id);
 	
