@@ -277,8 +277,66 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public int updateImage(Customer customer) {
-		return 0;
+	public int updateImage (int IdCustomer, byte[] image) {
+		int count = 0;
+		String sql = "UPDATE Customer "
+				+ "SET CustomerPic = ? "
+				+ "WHERE IdCustomer = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setBytes(1, image != null ? image : null);
+			ps.setInt(2, IdCustomer);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
-
+	
+	@Override
+	public byte[] getImage(int IdCustomer) {
+		String sql = "SELECT CustomerPic FROM Customer WHERE IdCustomer = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		byte[] image = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, IdCustomer);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return image;
+	}
 }

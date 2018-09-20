@@ -11,7 +11,7 @@ public interface RatingDao {
 	
 	int updateReview(Rating rating);
 	
-	int delete(int IdRating);
+	int delete(int IdRoomReservation);
 
 	Rating findById (int IdRoomReservation);
 
