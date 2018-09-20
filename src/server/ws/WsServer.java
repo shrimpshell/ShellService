@@ -24,7 +24,9 @@ import javax.websocket.server.ServerEndpoint;
 
 import com.google.gson.Gson;
 
+import common.ChangeDate;
 import common.Common;
+import service.customer.Customer;
 import service.room.Room;
 
 @ServerEndpoint("/Services/{userName}")
@@ -94,92 +96,6 @@ public class WsServer {
 		String text = String.format("session ID = %s, disconnected; close code = %d%nusers: %s", userSession.getId(),
 				reason.getCloseCode().getCode(), userNames);
 		System.out.println(text);
-	}
-	
-	private int getIdFromRoomNumner(String roomNumber) {
-		int IdRoomStatus = 0;
-		String sql = "SELECT IdRoomStatus FROM RoomStatus WHERE RoomNumber = ?";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,Common.PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setString(1, roomNumber);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				IdRoomStatus = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return IdRoomStatus;
-	}
-	
-	private int insertCleanStatus(int IdRoomStatus) {
-		int count = 0;
-		String sql = "INSERT INTO CleanService (IdHousekeeping, Status, IdRoomStatus) VALUES (null, 0, ?)";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,Common.PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, IdRoomStatus);
-			count = ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return count;
-	}
-	
-	
-	private int updateCleanStatus(int IdRoomStatus, int status) {
-		int count = 0;
-		String sql = "UPDATE CleanService SET Status = ? WHERE IdHousekeeping = ?";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,Common.PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, status);
-			ps.setInt(2, IdRoomStatus);
-			count = ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return count;
 	}
 	
 	private void writeText(String outText) {
