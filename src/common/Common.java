@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Common {
-	public static final String URL = "jdbc:mysql://140.115.236.75:3306/db_cp102b";
+	public static final String URL = "jdbc:mysql://140.115.236.75:3306/db_cp102b?serverTimezone=UTC";
 	public static final String USERNAME = "cp102b";
 	public static final String PASSWORD = "cp102b";
 	
