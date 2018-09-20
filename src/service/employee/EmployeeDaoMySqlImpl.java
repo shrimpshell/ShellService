@@ -27,7 +27,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 		int count = 0;
 		String sql = "INSERT INTO Employee" +
 				"(IdEmployee, EmployeeCode, Name, Password, Email, Gendar, Phone, Adress, EmployeePic, isDeleted, IdDepartment)" +
-				"VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
+				"VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?);";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -105,7 +105,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 		int count = 0;
 		String sql = "UPDATE Employee SET " +
 				"isDeleted = 1 " +
-				"WHERE IdEmployee = ?";
+				"WHERE IdEmployee = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -132,7 +132,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public byte[] getImage(int id) {
-		String sql = "SELECT EmployeePic FROM Employee WHERE IdEmployee = ?";
+		String sql = "SELECT EmployeePic FROM Employee WHERE IdEmployee = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		byte[] image = null;
@@ -163,7 +163,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public Employees findById(int id) {
-		String sql = "SELECT * FROM Employee WHERE IdEmployee = ?";
+		String sql = "SELECT * FROM Employee WHERE IdEmployee = ?;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		Employees employee = null;
@@ -201,7 +201,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public List<Employees> getAll() {
-		String sql = "SELECT * FROM Employee WHERE isDeleted = 0";
+		String sql = "SELECT * FROM Employee WHERE isDeleted = 0;";
 		List<Employees> employeeList = new ArrayList<Employees>();
 		Connection connection = null;
 		PreparedStatement ps = null;

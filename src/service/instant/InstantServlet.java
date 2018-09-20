@@ -58,10 +58,12 @@ public class InstantServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<Instant> events = instantDao.getAll();
 			writeText(response, gson.toJson(events));
+		
 		} else if (action.equals("instantInsert")) {
 			String instantJson = jsonObject.get("instant").getAsString();
 			Instant instant = gson.fromJson(instantJson, Instant.class);
 			writeText(response, String.valueOf(instantDao.insert(instant)));
+		
 		} else if (action.equals("instantUpdate")) {
 			Instant instant = gson.fromJson(jsonObject.get("instant").getAsString(), Instant.class);
 			writeText(response, String.valueOf(instantDao.update(instant)));

@@ -1,37 +1,36 @@
 package service.instant;
 
 public class Instant {
-	private int Status,Quantity,Price,IdDinling,IdCleanService,IdRoomService;
-	private String DinlingTypeName,Type;
-	
-	public Instant(int status, int quantity, int price, int idDinling, String dinlingTypeName) {
+	private int IdInstantDetail, IdInstantService, Status, Quantity, IdInstantType, IdRoomStatus;
+
+	public Instant(int idInstantDetail, int idInstantService, int status, int quantity, int idInstantType,
+			int idRoomStatus) {
 		super();
+		IdInstantDetail = idInstantDetail;
+		IdInstantService = idInstantService;
 		Status = status;
 		Quantity = quantity;
-		Price = price;
-		IdDinling = idDinling;
-		DinlingTypeName = dinlingTypeName;
-		
+		IdInstantType = idInstantType;
+		IdRoomStatus = idRoomStatus;
 	}
 	
+	
 
-	public Instant(int status, int quantity, int idRoomService, String type) {
-		super();
-		Status = status;
-		Quantity = quantity;
-		IdRoomService = idRoomService;
-		Type = type;
+	public int getIdInstantDetail() {
+		return IdInstantDetail;
 	}
 
-
-	public Instant(int status, int idCleanService) {
-		super();
-		Status = status;
-		IdCleanService = idCleanService;
-		
+	public void setIdInstantDetail(int idInstantDetail) {
+		IdInstantDetail = idInstantDetail;
 	}
 
+	public int getIdInstantService() {
+		return IdInstantService;
+	}
 
+	public void setIdInstantService(int idInstantService) {
+		IdInstantService = idInstantService;
+	}
 
 	public int getStatus() {
 		return Status;
@@ -49,53 +48,22 @@ public class Instant {
 		Quantity = quantity;
 	}
 
-	public int getPrice() {
-		return Price;
+	public int getIdInstantType() {
+		return IdInstantType;
 	}
 
-	public void setPrice(int price) {
-		Price = price;
+	public void setIdInstantType(int idInstantType) {
+		IdInstantType = idInstantType;
 	}
 
-	public int getIdDinling() {
-		return IdDinling;
+	public int getIdRoomStatus() {
+		return IdRoomStatus;
 	}
 
-	public void setIdDinling(int idDinling) {
-		IdDinling = idDinling;
+	public void setIdRoomStatus(int idRoomStatus) {
+		IdRoomStatus = idRoomStatus;
 	}
-
-	public int getIdCleanService() {
-		return IdCleanService;
-	}
-
-	public void setIdCleanService(int idCleanService) {
-		IdCleanService = idCleanService;
-	}
-
-	public int getIdRoomService() {
-		return IdRoomService;
-	}
-
-	public void setIdRoomService(int idRoomService) {
-		IdRoomService = idRoomService;
-	}
-
-	public String getDinlingTypeName() {
-		return DinlingTypeName;
-	}
-
-	public void setDinlingTypeName(String dinlingTypeName) {
-		DinlingTypeName = dinlingTypeName;
-	}
-
-	public String getType() {
-		return Type;
-	}
-
-	public void setType(String type) {
-		Type = type;
-	}
-
+	
+	
 	
 }

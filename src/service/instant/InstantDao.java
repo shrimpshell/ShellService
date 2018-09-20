@@ -8,8 +8,6 @@ public interface InstantDao {
 	
 	int update(Instant instant); 
 	
-	Instant findById (int id);
-	
 	List<Instant> getAll();
 	
 	
