@@ -4,18 +4,34 @@ public class Instant {
 	private int Status,Quantity,Price,IdDinling,IdCleanService,IdRoomService;
 	private String DinlingTypeName,Type;
 	
-	public Instant(int status, int quantity, int price, int idDinling, int idCleanService, int idRoomService,
-			String dinlingTypeName, String type) {
+	public Instant(int status, int quantity, int price, int idDinling, String dinlingTypeName) {
 		super();
 		Status = status;
 		Quantity = quantity;
 		Price = price;
 		IdDinling = idDinling;
-		IdCleanService = idCleanService;
-		IdRoomService = idRoomService;
 		DinlingTypeName = dinlingTypeName;
+		
+	}
+	
+
+	public Instant(int status, int quantity, int idRoomService, String type) {
+		super();
+		Status = status;
+		Quantity = quantity;
+		IdRoomService = idRoomService;
 		Type = type;
 	}
+
+
+	public Instant(int status, int idCleanService) {
+		super();
+		Status = status;
+		IdCleanService = idCleanService;
+		
+	}
+
+
 
 	public int getStatus() {
 		return Status;
