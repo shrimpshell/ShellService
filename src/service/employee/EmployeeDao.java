@@ -4,11 +4,17 @@ import java.util.List;
 
 public interface EmployeeDao {
 	
-	boolean employeeValid(String employCode, String password);
+	int userValid(String email, String password);
+
+	boolean userExist(String email);
+	
+	boolean employeeValid(String email, String password);
 	
 	int insert(Employees employee, byte[] image);
 	
 	int update(Employees employee, byte[] image);
+	
+	int updateImage(int IdEmployee, byte[] image);
 	
 	int delete(int id);
 	

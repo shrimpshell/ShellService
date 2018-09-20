@@ -27,15 +27,15 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public int userValid(String customerID, String password) {
-		String sql = "SELECT IdCustomer FROM Customer WHERE CustomerID = ? AND Password = ?;";
+	public int userValid(String email, String password) {
+		String sql = "SELECT IdCustomer FROM Customer WHERE Email = ? AND Password = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		int idCustomer = 0;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, customerID);
+			ps.setString(1, email);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -167,7 +167,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	@Override
 	public int delete(int idCustomer) {
 		int count = 0;
-		String sql = "UPDATE Employee SET " +
+		String sql = "UPDATE Customer SET " +
 				"isDeleted = 1 " +
 				"WHERE IdCustomer = ?";
 		Connection connection = null;
@@ -198,13 +198,13 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	public Customer findById(int IdCustomer) {
 		String sql = "SELECT Name, Email, Password, Birthday, Phone, Address "
 				+ "FROM Customer WHERE IdCustomer = ?;";
-		Connection connectio = null;
+		Connection connection = null;
 		PreparedStatement ps = null;
 		Customer customer = null;
 		try {
-			connectio = DriverManager.getConnection(Common.URL, Common.USERNAME,
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
-			ps = connectio.prepareStatement(sql);
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, IdCustomer);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
@@ -223,8 +223,8 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 				if (ps != null) {
 					ps.close();
 				}
-				if (connectio != null) {
-					connectio.close();
+				if (connection != null) {
+					connection.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -277,8 +277,66 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public int updateImage(Customer customer) {
-		return 0;
+	public int updateImage (int IdCustomer, byte[] image) {
+		int count = 0;
+		String sql = "UPDATE Customer "
+				+ "SET CustomerPic = ? "
+				+ "WHERE IdCustomer = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setBytes(1, image != null ? image : null);
+			ps.setInt(2, IdCustomer);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
-
+	
+	@Override
+	public byte[] getImage(int IdCustomer) {
+		String sql = "SELECT CustomerPic FROM Customer WHERE IdCustomer = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		byte[] image = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, IdCustomer);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return image;
+	}
 }

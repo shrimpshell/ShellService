@@ -2,6 +2,7 @@ package service.customer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Base64;
 import java.util.List;
@@ -41,9 +42,9 @@ public class CustomerServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 		//user登入方法
 		if(action.equals("userValid")) {
-			String customerID = jsonObject.get("customerID").getAsString();
+			String email = jsonObject.get("email").getAsString();
 			String password = jsonObject.get("password").getAsString();
-			writeText(response, String.valueOf(customerDao.userValid(customerID, password)));
+			writeText(response, String.valueOf(customerDao.userValid(email, password)));
 		//檢查申請帳號是否重複
 		}else if(action.equals("userExist")) {
 			String email = jsonObject.get("email").getAsString();
@@ -60,8 +61,13 @@ public class CustomerServlet extends HttpServlet {
 			writeText(response, String.valueOf(customerDao.update(customer)));
 		//會員圖片更新
 		}else if(action.equals("updateImage")) {
+			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
 			String imageBase64 = jsonObject.get("imageBase64").getAsString();
-			byte[] image = Base64.getMimeDecoder().decode(imageBase64);
+			byte[] image = null;
+			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
+			int count = 0;
+			count = customerDao.updateImage(Integer.valueOf(IdCustomer), image);
+			writeText(response, String.valueOf(count));
 		//用id尋找會員資料
 		}else if(action.equals("findById")) {
 			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
@@ -77,6 +83,15 @@ public class CustomerServlet extends HttpServlet {
 		}else if(action.equals("getAll")) {
 			List<Customer> customers = customerDao.getAll();
 			writeText(response, gson.toJson(customers));
+		}else if (action.equals("getImage")) {
+			OutputStream os = response.getOutputStream();
+			int IdCustomer = jsonObject.get("IdCustomer").getAsInt();
+			byte[] image = customerDao.getImage(IdCustomer);
+			if (image != null) {
+				response.setContentType("image/jpeg");
+				response.setContentLength(image.length);
+			}
+			os.write(image);
 		}
 		
 	}

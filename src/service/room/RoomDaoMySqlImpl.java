@@ -21,14 +21,13 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	@Override
 	public int insert(Room room, byte[] image) {
 		int count = 0;
-		String sql = "INSERT INTO RoomType" + 
-				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price, RoomPic)" +
+		String sql = "INSERT INTO RoomType " + 
+				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price, RoomPic) " +
 				"VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, room.getName());
 			ps.setString(2, room.getRoomSize());

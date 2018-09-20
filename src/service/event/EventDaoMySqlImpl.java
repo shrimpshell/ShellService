@@ -33,13 +33,14 @@ public class EventDaoMySqlImpl implements EventDao {
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			float discount = event.getDiscount() > 1.0f ? event.getDiscount()/10.0f : event.getDiscount();
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, event.getName());
 			ps.setString(2, event.getDescription());
 			ps.setDate(3, Date.valueOf(event.getStart()));
 			ps.setDate(4, Date.valueOf(event.getEnd()));
 			ps.setBytes(5, image != null ? image : null);
-			ps.setFloat(6, event.getDiscount());
+			ps.setFloat(6, discount);
 			count = ps.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -68,13 +69,14 @@ public class EventDaoMySqlImpl implements EventDao {
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			float discount = event.getDiscount() > 1.0f ? event.getDiscount()/10.0f : event.getDiscount();
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, event.getName());
 			ps.setString(2, event.getDescription());
 			ps.setDate(3, Date.valueOf(event.getStart()));
 			ps.setDate(4, Date.valueOf(event.getEnd()));
 			ps.setBytes(5, image != null ? image : null);
-			ps.setFloat(6, event.getDiscount());
+			ps.setFloat(6, discount);
 			ps.setInt(7, event.getEventId());
 			count = ps.executeUpdate();
 		} catch (Exception e) {
