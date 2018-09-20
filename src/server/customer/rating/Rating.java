@@ -1,12 +1,10 @@
 package server.customer.rating;
 
-import java.util.List;
-
 public class Rating {
 	
 	int IdRating, IdRoomReservation, IdCustomer;
 	Float ratingStar;
-	String opinion, review;
+	String opinion, review, time;
 //	private List<RatingDetail> ratingDetailList;
 	
 	public Rating() {
@@ -19,18 +17,20 @@ public class Rating {
 		this.IdCustomer = IdCustomer;
 	}
 	
-	public Rating(int IdRating, Float ratingStar, String opinion, String review, 
+	public Rating(int IdRating, Float ratingStar, String time, String opinion, String review, 
 		int IdRoomReservation) {
 		this.IdRating = IdRating;
+		this.time = time;
 		this.ratingStar = ratingStar;
 		this.opinion = opinion;
 		this.review = review;
 		this.IdRoomReservation = IdRoomReservation;
 	}
 	
-	public Rating (Float ratingStar, String opinion, String review, int idRoomReservation
+	public Rating (Float ratingStar, String time, String opinion, String review, int idRoomReservation
 			, int IdCustomer) {
 		this.ratingStar = ratingStar;
+		this.time = time;
 		this.opinion = opinion;
 		this.review = review;
 		this.IdRoomReservation = idRoomReservation;
@@ -82,6 +82,24 @@ public class Rating {
 	public void setReview(String review) {
 		this.review = review;
 	}
+
+	public int getIdCustomer() {
+		return IdCustomer;
+	}
+
+	public void setIdCustomer(int idCustomer) {
+		IdCustomer = idCustomer;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+	
+	
 
 //	public List<RatingDetail> getRatingDetailList() {
 //		return ratingDetailList;
