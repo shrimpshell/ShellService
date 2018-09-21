@@ -34,7 +34,7 @@ import com.google.gson.Gson;
 import server.ws.ChatMessage;
 
 
-@ServerEndpoint("/Services/{userName}/{groupId}")
+@ServerEndpoint("/WsServer/{userId}/{groupId}")
 public class WsServer {
 	private static Map<String, User> sessionsMap = new ConcurrentHashMap<>();
 	Gson gson = new Gson();
@@ -49,7 +49,7 @@ public class WsServer {
 	
 		
 		String text = String.format("Session ID = %s, connected; userId = %s%n, "
-				+ "groupId = %s%n, userNames = %s%n ", userSession.getId(), userId, groupId);
+				+ "groupId = %s%n ", userSession.getId(), userId, groupId);
 		System.out.println(text);
 	
 
@@ -58,21 +58,25 @@ public class WsServer {
 	@OnMessage
 	public void onMessage(Session userSession, String message) {
 		ChatMessage chatMessage = gson.fromJson(message, ChatMessage.class);
+		
+		String text1 = String.format("Message received: %s%n ", message + " Connection OK");
+		   System.out.println(text1);
 
 		String receiverId = chatMessage.getReceiverId();
 		String senderGroupId = chatMessage.getSenderGroupId();
 		String receiverGroupId = chatMessage.getReceiverGroupId();
 		User userIds = sessionsMap.get(receiverId);
 		Collection<User> users = sessionsMap.values();
-		// groupId => 0: Customer 1:Clean 2:Dinling 3:RoomService
+		// groupId => 0:Customer 1:Clean 2:RoomService 3:Dinling
 		switch (senderGroupId) {
 		   case "0": 
 			   for (User user : users) {
 				   if (receiverGroupId.equals(user.getGropuId())) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
-					   String text = String.format("Message received: %s%n", message);
-					   System.out.println(text);
+					   String text2 = String.format("Message received: %s%n", message + " Costomer");
+					   System.out.println(text2);
+					   
 				   }
 			   }
 			   break;
@@ -82,8 +86,8 @@ public class WsServer {
 				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null ) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
-					   String text = String.format("Message received: %s%n", message);
-					   System.out.println(text);
+					   String text3 = String.format("Message received: %s%n", message + " Clean");
+					   System.out.println(text3);
 				   }
 			   }
 			   break;
@@ -92,8 +96,8 @@ public class WsServer {
 				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
-					   String text = String.format("Message received: %s%n", message);
-					   System.out.println(text);
+					   String text4 = String.format("Message received: %s%n", message + " Room");
+					   System.out.println(text4);
 				   }
 			   }
 			   break;
@@ -102,14 +106,12 @@ public class WsServer {
 				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
-					   String text = String.format("Message received: %s%n", message);
-					   System.out.println(text);
+					   String text5 = String.format("Message received: %s%n", message + " Dinling");
+					   System.out.println(text5);
 				   }
 			   }
 			   break;
 		   default:
-			   String text = String.format("Message received: %s%n", message);
-			   System.out.println(text);
 			   break;
 			   }
 		}

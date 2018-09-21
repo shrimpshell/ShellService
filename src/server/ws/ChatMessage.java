@@ -2,20 +2,20 @@ package server.ws;
 
 public class ChatMessage {
 
-	private String senderId;
-	private String receiverId;
-	private String senderGroupId;
-	private String receiverGroupId;
-	private int serviceId;
+	private String senderId, receiverId, senderGroupId, receiverGroupId, serviceItem;
+    private int serviceId, status, quantity;
 	
-	public ChatMessage(String senderId, String receiverId, String senderGroupId, String receiverGroupId,
-			int serviceId) {
+    public ChatMessage(String senderId, String receiverId, String senderGroupId, String receiverGroupId,
+			String serviceItem, int serviceId, int status, int quantity) {
 		super();
 		this.senderId = senderId;
 		this.receiverId = receiverId;
 		this.senderGroupId = senderGroupId;
 		this.receiverGroupId = receiverGroupId;
+		this.serviceItem = serviceItem;
 		this.serviceId = serviceId;
+		this.status = status;
+		this.quantity = quantity;
 	}
 
 	public String getSenderId() {
@@ -50,6 +50,14 @@ public class ChatMessage {
 		this.receiverGroupId = receiverGroupId;
 	}
 
+	public String getServiceItem() {
+		return serviceItem;
+	}
+
+	public void setServiceItem(String serviceItem) {
+		this.serviceItem = serviceItem;
+	}
+
 	public int getServiceId() {
 		return serviceId;
 	}
@@ -57,6 +65,27 @@ public class ChatMessage {
 	public void setServiceId(int serviceId) {
 		this.serviceId = serviceId;
 	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+    
+    
+    
+    
+	
 	
 }
 	
