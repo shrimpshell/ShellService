@@ -161,7 +161,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	@Override
 	public int delete(int IdRoomReservation) {
 		int count = 0;
-		String sql = "DELETE FROM Rating WHERE IdRoomReservation = ?";
+		String sql = "DELETE FROM Rating WHERE IdRoomReservation = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -187,7 +187,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	}
 
 	@Override
-	public List<Rating> getAll(int IdCustomer) {
+	public List<Rating> getAllById(int IdCustomer) {
 		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation From Customer as A, RoomReservation as B, Rating as C WHERE (A.IdCustomer = ?) And (A.IdCustomer = B.IdCustomer) "
 				+ "And (B.IdRoomReservation = C.IdRoomReservation) ORDER BY time DESC, IdRating DESC";
 		Connection connection = null;
@@ -226,6 +226,49 @@ public class RatingDaoMySqlImpl implements RatingDao{
 		}
 		return ratingList;
 	}
+
+	@Override
+	public List<Rating> getAll() {
+		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation A.Name From Customer as A, RoomReservation as B, Rating as C  And (A.IdCustomer = B.IdCustomer) \"\n" + 
+				"				+ \"And (B.IdRoomReservation = C.IdRoomReservation) ORDER BY time DESC, IdRating DESC\"";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<Rating> ratingList = new ArrayList<>();
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+				
+			ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Float ratingStar = rs.getFloat(1);
+				String time = ChangeDate.getDateToStr(rs.getDate(2));
+				String opinion = rs.getString(3);
+				String  review = rs.getString(4);
+				int IdRoomReservation = rs.getInt(5);
+				String Name = rs.getString(6);
+				Rating rating = new Rating(ratingStar, time, opinion, review, IdRoomReservation, Name);
+				ratingList.add(rating);
+			}
+			return ratingList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return ratingList;
+	}
+	
+	
 
 
 

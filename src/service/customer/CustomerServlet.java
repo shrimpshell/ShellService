@@ -80,7 +80,7 @@ public class CustomerServlet extends HttpServlet {
 			int count = customerDao.delete(customer.getIdCustomer());
 			writeText(response, String.valueOf(count));
 		//取得所有會員資訊
-		}else if(action.equals("getAll")) {
+		}else if(action.equals("getAllById")) {
 			List<Customer> customers = customerDao.getAll();
 			writeText(response, gson.toJson(customers));
 		}else if (action.equals("getImage")) {

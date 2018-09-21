@@ -4,7 +4,7 @@ public class Rating {
 	
 	int IdRating, IdRoomReservation, IdCustomer;
 	Float ratingStar;
-	String opinion, review, time;
+	String opinion, review, time, Name;
 //	private List<RatingDetail> ratingDetailList;
 	
 	public Rating() {
@@ -35,6 +35,16 @@ public class Rating {
 		this.review = review;
 		this.IdRoomReservation = idRoomReservation;
 		this.IdCustomer = IdCustomer;
+	}
+	
+	public Rating (Float ratingStar, String time, String opinion, String review, int idRoomReservation
+			, String Name) {
+		this.ratingStar = ratingStar;
+		this.time = time;
+		this.opinion = opinion;
+		this.review = review;
+		this.IdRoomReservation = idRoomReservation;
+		this.Name = Name;
 	}
 	
 	public Rating(int IdRoomReservation, Float ratingStar, String opinion) {
@@ -97,6 +107,14 @@ public class Rating {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public String getName() {
+		return Name;
+	}
+
+	public void setName(String name) {
+		this.Name = name;
 	}
 	
 	

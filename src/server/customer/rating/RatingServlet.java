@@ -61,14 +61,17 @@ public class RatingServlet extends HttpServlet {
 			Rating rating = ratingDao.findById(Integer.valueOf(IdRoomReservation));
 			writeText(response, gson.toJson(rating));
 		}else if(action.equals("delete")) {
-			String ratingJson = jsonObject.get("rating").getAsString();
-			Rating rating = gson.fromJson(ratingJson, Rating.class);
-			int count = ratingDao.delete(rating.getIdRating());
+			int ratingJson = jsonObject.get("IdRoomReservation").getAsInt();
+			int count = ratingDao.delete(ratingJson);
 			writeText(response, String.valueOf(count));
 		}else if(action.equals("getAll")) {
 			int IdCustomer = jsonObject.get("IdCustomer").getAsInt();
 			List<Rating> ratings = ratingDao.getAll(IdCustomer);
 			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getAll")) {
+			List<Rating> ratings = ratingDao.getAll();
+			writeText(response, gson.toJson(ratings));
+			
 		}
 	}
 			
