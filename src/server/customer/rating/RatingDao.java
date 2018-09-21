@@ -15,7 +15,7 @@ public interface RatingDao {
 
 	Rating findById (int IdRoomReservation);
 
-	List<Rating> getAll(int IdCustomer);
+	List<Rating> getAllById(int IdCustomer);
 	
 	List<Rating> getAll();
 

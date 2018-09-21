@@ -186,7 +186,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 		return count;
 	}
 
-	@Override
+//	@Override
 	public List<Rating> getAllById(int IdCustomer) {
 		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation From Customer as A, RoomReservation as B, Rating as C WHERE (A.IdCustomer = ?) And (A.IdCustomer = B.IdCustomer) "
 				+ "And (B.IdRoomReservation = C.IdRoomReservation) ORDER BY time DESC, IdRating DESC";
@@ -229,8 +229,10 @@ public class RatingDaoMySqlImpl implements RatingDao{
 
 	@Override
 	public List<Rating> getAll() {
-		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation A.Name From Customer as A, RoomReservation as B, Rating as C  And (A.IdCustomer = B.IdCustomer) \"\n" + 
-				"				+ \"And (B.IdRoomReservation = C.IdRoomReservation) ORDER BY time DESC, IdRating DESC\"";
+		String sql = "Select Rating.ratingStar, Rating.time, Rating.opinion, Rating.review, "
+				+ "Rating.IdRoomReservation, Customer.Name From Rating join RoomReservation on "
+				+ "Rating.IdRoomReservation=RoomReservation.IdRoomReservation join Customer on "
+				+ "RoomReservation.IdCustomer=Customer.IdCustomer ORDER BY time DESC, IdRating DESC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Rating> ratingList = new ArrayList<>();
