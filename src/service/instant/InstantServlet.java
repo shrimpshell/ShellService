@@ -19,7 +19,7 @@ import service.employee.Employees;
 
 
 @SuppressWarnings("serial")
-@WebServlet("InstantServlet")
+@WebServlet("/InstantServlet")
 public class InstantServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	InstantDao instantDao = null;
