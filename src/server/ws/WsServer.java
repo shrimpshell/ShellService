@@ -47,9 +47,10 @@ public class WsServer {
 		
 		sessionsMap.put(userId, user); // Map存放userId和user物件
 	
+		Set<String> userIds = sessionsMap.keySet();
 		
-		String text = String.format("Session ID = %s, connected; userId = %s%n, "
-				+ "groupId = %s%n ", userSession.getId(), userId, groupId);
+		String text = String.format("Session ID = %s, connected; userId = %s%n, groupId = %s%n, AllUsers %s%n"
+				, userSession.getId(), userId, groupId, userIds);
 		System.out.println(text);
 	
 
@@ -74,7 +75,7 @@ public class WsServer {
 				   if (receiverGroupId.equals(user.getGropuId())) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
-					   String text2 = String.format("Message received: %s%n", message + " Costomer");
+					   String text2 = String.format("Message received: %s%n", message + " Customer");
 					   System.out.println(text2);
 					   
 				   }
@@ -83,7 +84,7 @@ public class WsServer {
 		   
 		   case "1":
 			   for (User user : users) {
-				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null ) {
+				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null && user.getSession().isOpen()) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
 					   String text3 = String.format("Message received: %s%n", message + " Clean");
@@ -93,7 +94,7 @@ public class WsServer {
 			   break;
 		   case "2":
 			   for (User user : users) {
-				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null) {
+				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null && user.getSession().isOpen()) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
 					   String text4 = String.format("Message received: %s%n", message + " Room");
@@ -103,7 +104,7 @@ public class WsServer {
 			   break;
 		   case "3":
 			   for (User user : users) {
-				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null) {
+				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null && user.getSession().isOpen()) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
 					   String text5 = String.format("Message received: %s%n", message + " Dinling");
@@ -120,11 +121,9 @@ public class WsServer {
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason){
 		
-		Set<String> userIds = sessionsMap.keySet();
 
-
-		String text = String.format("Session ID = %s, disconnected; close code = %d%n userIds: %s",
-				userSession.getId(),reason.getCloseCode().getCode(),userIds);
+		String text = String.format("Session ID = %s, disconnected; close code = %d%n ",
+				userSession.getId(),reason.getCloseCode().getCode());
 		System.out.println(text);
 		
 	}
