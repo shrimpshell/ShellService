@@ -2,9 +2,10 @@ package service.instant;
 
 public class Instant {
 	private int IdInstantDetail, IdInstantService, Status, Quantity, IdInstantType, IdRoomStatus;
-
+	private String RoomNumber;
+	
 	public Instant(int idInstantDetail, int idInstantService, int status, int quantity, int idInstantType,
-			int idRoomStatus) {
+			int idRoomStatus, String roomNumber) {
 		super();
 		IdInstantDetail = idInstantDetail;
 		IdInstantService = idInstantService;
@@ -12,9 +13,8 @@ public class Instant {
 		Quantity = quantity;
 		IdInstantType = idInstantType;
 		IdRoomStatus = idRoomStatus;
+		RoomNumber = roomNumber;
 	}
-	
-	
 
 	public int getIdInstantDetail() {
 		return IdInstantDetail;
@@ -63,7 +63,17 @@ public class Instant {
 	public void setIdRoomStatus(int idRoomStatus) {
 		IdRoomStatus = idRoomStatus;
 	}
+
+	public String getRoomNumber() {
+		return RoomNumber;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		RoomNumber = roomNumber;
+	}
 	
 	
 	
+	
+
 }

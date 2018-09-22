@@ -1,6 +1,5 @@
 package service.instant;
 
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,28 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import common.Common;
-import service.employee.Employees;
 
 
-
-public class InstantDaoMySqlImpl implements InstantDao {
-	
-	public InstantDaoMySqlImpl() {
-		super();
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+public class InstantDaoMySqlImpl implements InstantDao{
 
 	@Override
-	public int insert(Instant instant) {
+	public int insertInstant(Instant instant) {
 		int count = 0;
-		String sql = "INSERT INTO InstantDetail" +
-		"(IdInstantDetail, IdInstantService, Status, Quantity, IdInstantType, IdRoomStatus)" + 
-				"VALUES(null, ?, ?, ?, ?, ?);";
+		String sql = "";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -37,13 +24,14 @@ public class InstantDaoMySqlImpl implements InstantDao {
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, instant.getIdInstantDetail());
 			ps.setInt(2, instant.getIdInstantService());
-			ps.setInt(3, instant.getStatus());
-			ps.setInt(4, instant.getQuantity());
-			ps.setInt(5, instant.getIdInstantType());
-			ps.setInt(6, instant.getIdRoomStatus());
+			ps.setString(3, instant.getRoomNumber());
+			ps.setInt(4, instant.getStatus());
+			ps.setInt(5, instant.getQuantity());
+			ps.setInt(6, instant.getIdInstantType());
+			ps.setInt(7, instant.getIdRoomStatus());
 			count = ps.executeUpdate();
 		} catch(Exception e) {
-			e.printStackTrace();
+				e.printStackTrace();
 		} finally {
 			try {
 				if (ps != null) {
@@ -54,15 +42,17 @@ public class InstantDaoMySqlImpl implements InstantDao {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				}
 			}
-		}
 		return count;
-	}
-	
+		}
+
 	@Override
-	public int update(Instant instant) {
+	public int updateStatus(Instant instant) {
 		int count = 0;
-		String sql = "UPDATE InstantDetail SET Status =? WHERE IdInstantDetail = ?;";
+		String sql = "UPDATE InstantDetail SET " +
+				"Status = ?" +
+				"WHERE IdInstantDetail = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -86,11 +76,12 @@ public class InstantDaoMySqlImpl implements InstantDao {
 		}
 		return count;
 	}
+
 	
-	
+
 	@Override
 	public List<Instant> getAll() {
-		String sql = " SELECT * FROM InstantDetail; ";
+		String sql = "SELECT * FROM InstantDetail ;";
 		List<Instant> instantList = new ArrayList<Instant>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -99,13 +90,12 @@ public class InstantDaoMySqlImpl implements InstantDao {
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				int IdInstantDetail = rs.getInt(1);
-				int IdInstantService = rs.getInt(2);
-				int Status = rs.getInt(3);
-				int Quantity = rs.getInt(4);
-				int IdInstantType = rs.getInt(5);
-				int IdRoomStatus = rs.getInt(6);
-				Instant instant = new Instant(IdInstantDetail, IdInstantService, Status, Quantity, IdInstantType, IdRoomStatus);
+				int IdInstantDetail = rs.getInt(1), IdInstantService= rs.getInt(2), 
+						Status = rs.getInt(3), Quantity = rs.getInt(4), IdInstantType = rs.getInt(5), 
+						IdRoomStatus = rs.getInt(6);
+				String RoomNumber = rs.getString(7);
+				Instant instant = new Instant(IdInstantDetail, IdInstantService, Status, Quantity, 
+						IdInstantType, IdRoomStatus, RoomNumber);
 				instantList.add(instant);
 			}
 			return instantList;
@@ -125,4 +115,6 @@ public class InstantDaoMySqlImpl implements InstantDao {
 		}
 		return instantList;
 	}
+
+
 }
