@@ -52,7 +52,9 @@ public class RoomTypeServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAll")) {
-			List<RoomType> rooms = roomTypeDao.getAll();
+			String checkInDate = jsonObject.get("checkInDate").getAsString();
+			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
+			List<RoomType> rooms = roomTypeDao.getAll(checkInDate, checkOutDate);
 			writeText(response, gson.toJson(rooms));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
