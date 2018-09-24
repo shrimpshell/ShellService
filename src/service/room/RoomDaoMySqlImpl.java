@@ -162,7 +162,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 
 	@Override
 	public List<Room> getAll() {
-		String sql = "SELECT * FROM RoomType";
+		String sql = "SELECT * FROM RoomType ORDER BY IdRoomType DESC";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Room> roomList = new ArrayList<Room>();

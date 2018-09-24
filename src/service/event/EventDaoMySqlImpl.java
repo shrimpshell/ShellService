@@ -204,7 +204,7 @@ public class EventDaoMySqlImpl implements EventDao {
 
 	@Override
 	public List<Events> getAll() {
-		String sql = "SELECT * FROM Events";
+		String sql = "SELECT * FROM Events ORDER BY IdEvents DESC";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Events> eventList = new ArrayList<Events>();
