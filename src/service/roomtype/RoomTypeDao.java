@@ -11,4 +11,5 @@ public interface RoomTypeDao {
 	byte[] getImage(int id);
 	RoomType findById(int id);
 	List<RoomType> getAll();
+	List<RoomType> getAll(String checkInDate,String checkOutDate);
 }
