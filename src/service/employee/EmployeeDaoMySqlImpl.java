@@ -201,7 +201,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public List<Employees> getAll() {
-		String sql = "SELECT * FROM Employee WHERE isDeleted = 0";
+		String sql = "SELECT * FROM Employee WHERE isDeleted = 0 AND IdDepartment <> 5 ORDER BY IdEmployee DESC";
 		List<Employees> employeeList = new ArrayList<Employees>();
 		Connection connection = null;
 		PreparedStatement ps = null;
