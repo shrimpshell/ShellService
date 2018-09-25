@@ -1,4 +1,4 @@
-package service.roomtype;
+package service.reservation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,17 +18,17 @@ import com.google.gson.JsonObject;
 import common.ImageUtil;
 
 @SuppressWarnings("serial")
-@WebServlet("/RoomTypeServlet")
-public class RoomTypeServlet extends HttpServlet {
+@WebServlet("/ReservationServlet")
+public class ReservationServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	RoomTypeDao roomTypeDao = null;
+	ReservationDao roomTypeDao = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (roomTypeDao == null) {
-			roomTypeDao = new RoomTypeDaoMySqlImpl();
+			roomTypeDao = new ReservationDaoMySqlImpl();
 		}
-		List<RoomType> rooms = roomTypeDao.getAll();
+		List<Reservation> rooms = roomTypeDao.getAll();
 		writeText(response, new Gson().toJson(rooms));
 	}
 
@@ -46,18 +46,13 @@ public class RoomTypeServlet extends HttpServlet {
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (roomTypeDao == null) {
-			roomTypeDao = new RoomTypeDaoMySqlImpl();
+			roomTypeDao = new ReservationDaoMySqlImpl();
 		}
 
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAll")) {
-			List<RoomType> rooms = roomTypeDao.getAll();
-			writeText(response, gson.toJson(rooms));
-		} else if (action.equals("getReservation")) {
-			String checkInDate = jsonObject.get("checkInDate").getAsString();
-			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
-			List<RoomType> rooms = roomTypeDao.getReservation(checkInDate, checkOutDate);
+			List<Reservation> rooms = roomTypeDao.getAll();
 			writeText(response, gson.toJson(rooms));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
@@ -67,14 +62,8 @@ public class RoomTypeServlet extends HttpServlet {
 				response.setContentType("image/jpeg");
 				response.setContentLength(image.length);
 			}
-			try {
-				os.write(image);
-			} catch (NullPointerException e) {
-				writeText(response, "no image");
-			}
+			os.write(image);
 		}
-
-		
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {

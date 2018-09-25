@@ -22,7 +22,8 @@ public class EventServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
 	EventDao eventDao = null;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		if (eventDao == null) {
 			eventDao = new EventDaoMySqlImpl();
 		}
@@ -30,7 +31,8 @@ public class EventServlet extends HttpServlet {
 		writeText(response, new Gson().toJson(events));
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		Gson gson = new Gson();
 		BufferedReader br = request.getReader();
@@ -40,18 +42,22 @@ public class EventServlet extends HttpServlet {
 			jsonIn.append(line);
 		}
 		System.out.println("input: " + jsonIn);
-		
+
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
 		if (eventDao == null) {
 			eventDao = new EventDaoMySqlImpl();
 		}
-		
+
 		String action = jsonObject.get("action").getAsString();
 		if (action.equals("getAll")) {
 			List<Events> events = eventDao.getAll();
 			writeText(response, gson.toJson(events));
 		} else if (action.equals("getFive")) {
 			List<Events> events = eventDao.getFive();
+			writeText(response, gson.toJson(events));
+		} else if (action.equals("getDiscount")) {
+			String date = jsonObject.get("firstday").getAsString();
+			List<Events> events = eventDao.getDiscount(date);
 			writeText(response, gson.toJson(events));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
@@ -70,11 +76,12 @@ public class EventServlet extends HttpServlet {
 		} else if (action.equals("eventInsert") || action.equals("eventUpdate")) {
 			String eventJson = jsonObject.get("event").getAsString();
 			Events event = gson.fromJson(eventJson, Events.class);
-			
+
 			String imageBase64 = jsonObject.get("imageBase64").getAsString();
 			byte[] image = null;
-			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
-			
+			if (imageBase64.length() > 0)
+				image = Base64.getMimeDecoder().decode(imageBase64);
+
 			int count = 0;
 			if (action.equals("eventInsert")) {
 				count = eventDao.insert(event, image);
