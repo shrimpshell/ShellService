@@ -36,12 +36,12 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 	@Override
 	public RoomType findById(int id) {
 		String sql = "SELECT RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price FROM RoomType WHERE IdRoomType = ?;";
+
 		Connection conn = null;
 		PreparedStatement ps = null;
 		RoomType room = null;
 		try {
-			conn = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -74,13 +74,28 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 
 	@Override
 	public List<RoomType> getAll() {
-		String sql = "SELECT * FROM RoomType";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<RoomType> roomList = new ArrayList<RoomType>();
+		return roomList;
+	}
+
+	@Override
+	public List<RoomType> getAll(String checkInDate, String checkOutDate) {
+		String sql = "SELECT" + " rt.`IdRoomType`,\n" + " rt.RoomTypeName,\n" + " rt.RoomSize,\n" + " rt.Bed,\n"
+				+ " rt.AdultQuantity,\n" + " rt.ChildQuantity,\n" + " count(rt.`IdRoomType`) roomQuantity,\n"
+				+ " rt.Price\n" + " FROM RoomType rt\n" + " LEFT OUTER JOIN Room r on rt.IdRoomType=r.IdRoomType \n"
+				+ " LEFT OUTER JOIN RoomStatus rs on r.RoomNumber=rs.RoomNumber \n"
+				+ " LEFT OUTER JOIN RoomReservation rrn on rs.IdRoomReservation=rrn.IdRoomReservation\n" + "WHERE\n"
+				+ "rrn.`IdRoomReservation` is null\n" + " and\n" + "(rrn.`CheckInDate` between '" + checkInDate
+				+ "' and '" + checkOutDate + "') or (rrn.`CheckOuntDate` between '" + checkInDate + "' and '"
+				+ checkOutDate + "')\n" + "GROUP BY rt.`IdRoomType`;";
+		System.out.println(sql);
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<RoomType> roomList = new ArrayList<RoomType>();
 		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -120,8 +135,7 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 		PreparedStatement ps = null;
 		byte[] image = null;
 		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();

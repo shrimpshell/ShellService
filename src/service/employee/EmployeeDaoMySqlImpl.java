@@ -201,7 +201,9 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public List<Employees> getAll() {
-		String sql = "SELECT * FROM Employee WHERE isDeleted = 0;";
+
+		String sql = "SELECT * FROM Employee WHERE isDeleted = 0 AND IdDepartment <> 5 ORDER BY IdEmployee DESC";
+
 		List<Employees> employeeList = new ArrayList<Employees>();
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -302,7 +304,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public boolean userExist(String email) {
-		String sql = "SELECT Email FROM Employee WHERE Email = ?;";
+		String sql = "SELECT Email FROM Employee WHERE Email = ? AND isDeleted = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		boolean isEmployeeIdExist = false;

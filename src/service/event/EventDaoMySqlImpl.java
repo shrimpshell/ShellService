@@ -34,11 +34,15 @@ public class EventDaoMySqlImpl implements EventDao {
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			float discount = event.getDiscount() > 1.0f ? event.getDiscount()/10.0f : event.getDiscount();
+			Date start = Date.valueOf(event.getStart());
+			long startStr = start.getTime() + (1000 * 60 * 60 * 24);
+			Date end = Date.valueOf(event.getEnd());
+			long endStr = end.getTime() + (1000 * 60 * 60 * 24);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, event.getName());
 			ps.setString(2, event.getDescription());
-			ps.setDate(3, Date.valueOf(event.getStart()));
-			ps.setDate(4, Date.valueOf(event.getEnd()));
+			ps.setDate(3, new Date(startStr));
+			ps.setDate(4, new Date(endStr));
 			ps.setBytes(5, image != null ? image : null);
 			ps.setFloat(6, discount);
 			count = ps.executeUpdate();
@@ -70,11 +74,15 @@ public class EventDaoMySqlImpl implements EventDao {
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			float discount = event.getDiscount() > 1.0f ? event.getDiscount()/10.0f : event.getDiscount();
+			Date start = Date.valueOf(event.getStart());
+			long startStr = start.getTime() + (1000 * 60 * 60 * 24);
+			Date end = Date.valueOf(event.getEnd());
+			long endStr = end.getTime() + (1000 * 60 * 60 * 24);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, event.getName());
 			ps.setString(2, event.getDescription());
-			ps.setDate(3, Date.valueOf(event.getStart()));
-			ps.setDate(4, Date.valueOf(event.getEnd()));
+			ps.setDate(3, new Date(startStr));
+			ps.setDate(4, new Date(endStr));
 			ps.setBytes(5, image != null ? image : null);
 			ps.setFloat(6, discount);
 			ps.setInt(7, event.getEventId());
@@ -196,7 +204,7 @@ public class EventDaoMySqlImpl implements EventDao {
 
 	@Override
 	public List<Events> getAll() {
-		String sql = "SELECT * FROM Events";
+		String sql = "SELECT * FROM Events ORDER BY IdEvents DESC";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Events> eventList = new ArrayList<Events>();
@@ -209,7 +217,7 @@ public class EventDaoMySqlImpl implements EventDao {
 				int id = rs.getInt(1);
 				String name = rs.getString(2), description = rs.getString(5);
 				Date start = rs.getDate(3), end = rs.getDate(4);
-				float discount = rs.getFloat(8);
+				float discount = rs.getFloat(7);
 				@SuppressWarnings("deprecation")
 				String startStr = (1900 + start.getYear()) + "-" + ((start.getMonth() + 1) < 10 ?  "0" + (start.getMonth() + 1) : (start.getMonth() + 1)) + "-" + start.getDate();
 				@SuppressWarnings("deprecation")
@@ -249,7 +257,7 @@ public class EventDaoMySqlImpl implements EventDao {
 				int id = rs.getInt(1);
 				String name = rs.getString(2), description = rs.getString(5);
 				Date start = rs.getDate(3), end = rs.getDate(4);
-				float discount = rs.getFloat(8);
+				float discount = rs.getFloat(7);
 				@SuppressWarnings("deprecation")
 				String startStr = (1900 + start.getYear()) + "-" + ((start.getMonth() + 1) < 10 ?  "0" + (start.getMonth() + 1) : (start.getMonth() + 1)) + "-" + start.getDate();
 				@SuppressWarnings("deprecation")

@@ -66,7 +66,11 @@ public class EmployeeServlet extends HttpServlet {
 				response.setContentType("image/jpeg");
 				response.setContentLength(image.length);
 			}
-			os.write(image);
+			try {
+				os.write(image);
+			} catch (NullPointerException e) {
+				writeText(response, "image is null");
+			}
 		} else if (action.equals("employeeInsert") || action.equals("employeeUpdate")) {
 			String employeeJson = jsonObject.get("employee").getAsString();
 			Employees employee = gson.fromJson(employeeJson, Employees.class);

@@ -62,7 +62,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 
 	@Override
 	public boolean userExist(String email) {
-		String sql = "SELECT Email FROM Customer WHERE Email = ?;";
+		String sql = "SELECT Email FROM Customer WHERE Email = ? AND isDeleted = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		boolean isCustomerIdExist = false;
