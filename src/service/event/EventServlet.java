@@ -61,7 +61,12 @@ public class EventServlet extends HttpServlet {
 				response.setContentType("image/jpeg");
 				response.setContentLength(image.length);
 			}
-			os.write(image);
+			try {
+				os.write(image);
+			} catch (NullPointerException e) {
+				writeText(response, "no image");
+			}
+			
 		} else if (action.equals("eventInsert") || action.equals("eventUpdate")) {
 			String eventJson = jsonObject.get("event").getAsString();
 			Events event = gson.fromJson(eventJson, Events.class);
