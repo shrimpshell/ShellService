@@ -64,7 +64,11 @@ public class RoomTypeServlet extends HttpServlet {
 				response.setContentType("image/jpeg");
 				response.setContentLength(image.length);
 			}
-			os.write(image);
+			try {
+				os.write(image);
+			} catch (NullPointerException e) {
+				writeText(response, "no image");
+			}
 		}
 	}
 
