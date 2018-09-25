@@ -70,6 +70,8 @@ public class RoomTypeServlet extends HttpServlet {
 				writeText(response, "no image");
 			}
 		}
+
+		
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {

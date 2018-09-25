@@ -236,7 +236,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 
 	@Override
 	public List<Customer> getAll() {
-		String sql = "SELECT * FROM Customer WHERE isDeleted = 0;";
+		String sql = "SELECT * FROM Customer WHERE isDeleted = 0";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Customer> customerList = new ArrayList<Customer>();
