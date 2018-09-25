@@ -302,7 +302,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 
 	@Override
 	public boolean userExist(String email) {
-		String sql = "SELECT Email FROM Employee WHERE Email = ?;";
+		String sql = "SELECT Email FROM Employee WHERE Email = ? AND isDeleted = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		boolean isEmployeeIdExist = false;
