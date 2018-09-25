@@ -4,7 +4,9 @@ import java.util.List;
 
 public interface InstantDao {
 	int insertInstant(Instant instant);
-	int updateStatus(Instant instant);
-	List<Instant> getAll();
+	int updateStatus(int idInstantDetail, int status);
+	List<Instant> getEmployeeStatus(int idInstantService);
+	List<Instant> getCustomerStatus(String roomNumber);
+	
 
 }

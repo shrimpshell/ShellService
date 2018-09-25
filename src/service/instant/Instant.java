@@ -4,8 +4,8 @@ public class Instant {
 	private int IdInstantDetail, IdInstantService, Status, Quantity, IdInstantType, IdRoomStatus;
 	private String RoomNumber;
 	
-	public Instant(int idInstantDetail, int idInstantService, int status, int quantity, int idInstantType,
-			int idRoomStatus, String roomNumber) {
+	public Instant(int idInstantDetail, int idInstantService, String roomNumber, int status, int quantity, 
+			int idInstantType, int idRoomStatus) {
 		super();
 		IdInstantDetail = idInstantDetail;
 		IdInstantService = idInstantService;
@@ -15,6 +15,27 @@ public class Instant {
 		IdRoomStatus = idRoomStatus;
 		RoomNumber = roomNumber;
 	}
+	
+
+	public Instant(int idInstantService, String roomNumber, int status, int quantity, int idInstantType, int idRoomStatus) {
+		super();
+		IdInstantService = idInstantService;
+		Status = status;
+		Quantity = quantity;
+		IdInstantType = idInstantType;
+		IdRoomStatus = idRoomStatus;
+		RoomNumber = roomNumber;
+	}
+	
+	
+
+
+	public Instant(int idInstantDetail, int status) {
+		super();
+		IdInstantDetail = idInstantDetail;
+		Status = status;
+	}
+
 
 	public int getIdInstantDetail() {
 		return IdInstantDetail;

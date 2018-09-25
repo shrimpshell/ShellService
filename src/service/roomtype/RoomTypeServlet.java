@@ -64,6 +64,8 @@ public class RoomTypeServlet extends HttpServlet {
 			}
 			os.write(image);
 		}
+
+		
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {

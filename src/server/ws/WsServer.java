@@ -61,10 +61,11 @@ public class WsServer {
 		ChatMessage chatMessage = gson.fromJson(message, ChatMessage.class);
 		
 		String text1 = String.format("Message received: %s%n ", message + " Connection OK");
-		   System.out.println(text1);
-
+		System.out.println(text1);
+		
 		String receiverId = chatMessage.getReceiverId();
 		String senderGroupId = chatMessage.getSenderGroupId();
+		System.out.println("TESTWS : " +senderGroupId);
 		String receiverGroupId = chatMessage.getReceiverGroupId();
 		User userIds = sessionsMap.get(receiverId);
 		Collection<User> users = sessionsMap.values();
@@ -84,7 +85,7 @@ public class WsServer {
 		   
 		   case "1":
 			   for (User user : users) {
-				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null && user.getSession().isOpen()) {
+				   if (receiverGroupId.equals(user.getGropuId()) || senderGroupId.equals(user.getGropuId())) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
 					   String text3 = String.format("Message received: %s%n", message + " Clean");
@@ -94,7 +95,7 @@ public class WsServer {
 			   break;
 		   case "2":
 			   for (User user : users) {
-				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null && user.getSession().isOpen()) {
+				   if (receiverGroupId.equals(user.getGropuId()) || senderGroupId.equals(user.getGropuId())) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
 					   String text4 = String.format("Message received: %s%n", message + " Room");
@@ -104,7 +105,7 @@ public class WsServer {
 			   break;
 		   case "3":
 			   for (User user : users) {
-				   if (receiverGroupId.equals(user.getGropuId()) && userIds != null && user.getSession().isOpen()) {
+				   if (receiverGroupId.equals(user.getGropuId()) || senderGroupId.equals(user.getGropuId())) {
 					   user.getSession().getAsyncRemote().sendText(message);
 					   
 					   String text5 = String.format("Message received: %s%n", message + " Dinling");
@@ -112,7 +113,9 @@ public class WsServer {
 				   }
 			   }
 			   break;
+		  
 		   default:
+			   System.out.println("TEST:default");
 			   break;
 			   }
 		}
