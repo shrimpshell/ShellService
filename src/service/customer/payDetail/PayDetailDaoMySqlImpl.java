@@ -32,14 +32,14 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"rStatus.RoomNumber, " + 
 				"rType.Price, " + 
 				"rType.RoomTypeName, " +
-				"rReserv.roomQuantity " +
+				"rReserv.roomQuantity, " +
 				"rReserv.RoomReservationStatus " + 
 				"FROM RoomReservation AS rReserv " + 
 				"LEFT JOIN RoomType AS rType " + 
 				"ON rReserv.IdRoomType = rType.IdRoomType " + 
 				"LEFT JOIN RoomStatus AS rStatus " + 
 				"ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " + 
-				"WHERE rReserv.IdCustomer = 1 " + 
+				"WHERE rReserv.IdCustomer = ? " + 
 				"ORDER BY rReserv.CheckInDate ASC;";
 		Connection conn = null;
 		PreparedStatement ps = null;
