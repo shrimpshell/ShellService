@@ -27,40 +27,20 @@ public class Order {
 		return idRoomReservation;
 	}
 
-	public void setIdRoomReservation(int idRoomReservation) {
-		this.idRoomReservation = idRoomReservation;
-	}
-
 	public String getCheckInDate() {
 		return checkInDate;
-	}
-
-	public void setCheckInDate(String checkInDate) {
-		this.checkInDate = checkInDate;
 	}
 
 	public String getCheckOuntDate() {
 		return checkOuntDate;
 	}
 
-	public void setCheckOuntDate(String checkOuntDate) {
-		this.checkOuntDate = checkOuntDate;
-	}
-
 	public String getRoomReservationStatus() {
 		return roomReservationStatus;
 	}
 
-	public void setRoomReservationStatus(String roomReservationStatus) {
-		this.roomReservationStatus = roomReservationStatus;
-	}
-
 	public List<OrderDetail> getOrderDetailList() {
 		return orderDetailList;
-	}
-
-	public void setOrderDetailList(List<OrderDetail> orderDetailList) {
-		this.orderDetailList = orderDetailList;
 	}
 
 }
