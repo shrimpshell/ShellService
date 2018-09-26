@@ -31,6 +31,9 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"rReserv.CheckOuntDate, " + 
 				"rStatus.RoomNumber, " + 
 				"rType.Price, " + 
+				"rType.RoomTypeName, " +
+				"rReserv.roomQuantity " +
+				"rReserv.RoomReservationStatus " + 
 				"FROM RoomReservation AS rReserv " + 
 				"LEFT JOIN RoomType AS rType " + 
 				"ON rReserv.IdRoomType = rType.IdRoomType " + 
@@ -51,7 +54,10 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				String checkOuntDate = Common.getFmtdDateToStr(rs.getDate(3));
 				String roomNumber = rs.getString(4);
 				String price = String.valueOf(rs.getInt(5));
-				orderRoomDetail = new OrderRoomDetail(idRoomReservation, checkInDate, checkOuntDate, roomNumber, price);
+				String roomTypeName = rs.getString(6);
+				String roomQuantity = String.valueOf(rs.getInt(7));
+				String roomReservationStatus = rs.getString(8);
+				orderRoomDetail = new OrderRoomDetail(idRoomReservation, checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus);
 				orderRoomDetailList.add(orderRoomDetail);
 			}
 		} catch (SQLException e) {
