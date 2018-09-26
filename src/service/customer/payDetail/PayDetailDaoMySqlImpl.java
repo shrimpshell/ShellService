@@ -95,7 +95,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"ON rStatus.IdRoomStatus = iDetail.IdRoomStatus " + 
 				"LEFT JOIN InstantType AS iType " + 
 				"ON iDetail.IdInstantType = iType.IdInstantType " + 
-				"WHERE rReserv.IdCustomer = 1 AND iType.InstantTypeName IS NOT NULL" + 
+				"WHERE rReserv.IdCustomer = ? " + 
 				"ORDER BY rReserv.CheckInDate ASC;";
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -158,7 +158,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 						"ON rStatus.IdRoomStatus = iDetail.IdRoomStatus " + 
 						"LEFT JOIN InstantType AS iType " + 
 						"ON iDetail.IdInstantType = iType.IdInstantType " + 
-						"WHERE rReserv.IdCustomer = 1 " + 
+						"WHERE rReserv.IdCustomer = ? " + 
 						"ORDER BY rReserv.CheckInDate ASC;";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, userId);
