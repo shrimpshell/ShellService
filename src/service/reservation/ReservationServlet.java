@@ -16,20 +16,21 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import common.ImageUtil;
+import service.employee.Employees;
 
 @SuppressWarnings("serial")
 @WebServlet("/ReservationServlet")
 public class ReservationServlet extends HttpServlet {
 	private final static String CONTENT_TYPE = "text/html; charset=utf-8";
-	ReservationDao roomTypeDao = null;
+	ReservationDao reservationDao = null;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if (roomTypeDao == null) {
-			roomTypeDao = new ReservationDaoMySqlImpl();
+		if (reservationDao == null) {
+			reservationDao = new ReservationDaoMySqlImpl();
 		}
-		List<Reservation> rooms = roomTypeDao.getAll();
-		writeText(response, new Gson().toJson(rooms));
+		List<Reservation> reservations = reservationDao.getAll();
+		writeText(response, new Gson().toJson(reservations));
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -45,26 +46,25 @@ public class ReservationServlet extends HttpServlet {
 		System.out.println("input: " + jsonIn);
 
 		JsonObject jsonObject = gson.fromJson(jsonIn.toString(), JsonObject.class);
-		if (roomTypeDao == null) {
-			roomTypeDao = new ReservationDaoMySqlImpl();
+		if (reservationDao == null) {
+			reservationDao = new ReservationDaoMySqlImpl();
 		}
 
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("getAll")) {
-			List<Reservation> rooms = roomTypeDao.getAll();
-			writeText(response, gson.toJson(rooms));
-		} else if (action.equals("getImage")) {
+			List<Reservation> reservations = reservationDao.getAll();
+			writeText(response, gson.toJson(reservations));
+		} else if (action.equals("reservationInsert")) {
+			String reservationsJson = jsonObject.get("roomTypeId").getAsString();
+			Reservation reservation = gson.fromJson(reservationsJson, Reservation.class);
+			int count = 0;
 			OutputStream os = response.getOutputStream();
-			int id = jsonObject.get("imageId").getAsInt();
-			byte[] image = roomTypeDao.getImage(id);
-			if (image != null) {
-				response.setContentType("image/jpeg");
-				response.setContentLength(image.length);
+			count = reservationDao.insert(reservation);
+			writeText(response, String.valueOf(count));
 			}
-			os.write(image);
 		}
-	}
+	
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);

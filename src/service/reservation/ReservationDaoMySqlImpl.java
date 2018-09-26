@@ -19,12 +19,12 @@ public class ReservationDaoMySqlImpl implements ReservationDao {
 	}
 
 	@Override
-	public int insert(Reservation room, byte[] image) {
+	public int insert(Reservation reservation) {
 		return 0;
 	}
 
 	@Override
-	public int update(Reservation room, byte[] image) {
+	public int update(Reservation room) {
 		return 0;
 	}
 
