@@ -159,7 +159,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 						"LEFT JOIN InstantType AS iType " + 
 						"ON iDetail.IdInstantType = iType.IdInstantType " + 
 						"WHERE rReserv.IdCustomer = ? " + 
-						"ORDER BY rReserv.CheckInDate ASC;";
+						"ORDER BY rReserv.CheckInDate DESC;";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, userId);
 		
