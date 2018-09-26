@@ -48,12 +48,22 @@ public class PayDetailServlet extends HttpServlet {
 			String idCustomer = jsonObject.get("idCustomer").getAsString();
 			List<Order> payDetails = payDetailDao.getPayDetailById(idCustomer);
 			writeText(response, gson.toJson(payDetails));
-		}else if (action.equals("updateRoomReservationStatusById")) {
+		} else if (action.equals("getRoomPayDetailById")) {
+			String idCustomer = jsonObject.get("idCustomer").getAsString();
+			List<OrderRoomDetail> payRoomDetails = payDetailDao.getRoomPayDetailById(idCustomer);
+			writeText(response, gson.toJson(payRoomDetails));
+		} else if (action.equals("getInstantPayDetail")) {
+			String idCustomer = jsonObject.get("idCustomer").getAsString();
+			List<OrderInstantDetail> payInstantDetails = payDetailDao.getInstantPayDetail(idCustomer);
+			writeText(response, gson.toJson(payInstantDetails));
+		} else if (action.equals("getDiscount")) {
+			String discount = payDetailDao.getDiscount();
+			writeText(response, gson.toJson(discount));
+		} else if (action.equals("updateRoomReservationStatusById")) {
 			String roomReservationStatus = jsonObject.get("roomReservationStatus").getAsString();
 			String idRoomReservation = jsonObject.get("idRoomReservation").getAsString();
 			int count = 0;
 			count = payDetailDao.updateRoomReservationStatusById(roomReservationStatus, idRoomReservation);
-			
 			writeText(response, String.valueOf(count));
 		}
 	}
