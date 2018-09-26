@@ -28,33 +28,30 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 		List<Order> orderList = new ArrayList<>();
 		List<OrderDetail> orderDetailList = new ArrayList<>();
 		try {
-			conn = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			String sql;
-				sql = "select " + 
-						"rr.IdRoomReservation, " + 
-						"rr.CheckInDate, " + 
-						"rr.CheckOuntDate," + 
-						"rs.RoomNumber, " + 
-						"rs.RoomLevel, " + 
-						"rs.RoomType, " + 
-						"rt.Price," + 
-						"dt.DiningTypeName, " + 
-						"ds.Quantity, " + 
-						"dt.Price as dtPrice, " + 
-						"( select Discount from RoomReservation,Events Where RoomReservation.CheckInDate between Events_Start_Datetime and Events_End_Datetime) AS Discount, "+ 
-						"rr.RoomReservationStatus " + 
-						"from RoomReservation as rr " + 
-						"left join RoomType as rt " + 
-						"on rr.IdRoomType = rt.IdRoomType " + 
-						"left join RoomStatus as rs " + 
-						"on rr.IdRoomReservation = rs.IdRoomReservation " + 
-						"left join DiningService as ds " + 
-						"on rs.IdRoomStatus = ds.IdRoomStatus " + 
-						"left join DiningType as dt " + 
-						"on ds.IdDiningType = dt.IdDiningType " + 
-						"where rr.IdCustomer = ? " + 
-						"order by rr.CheckInDate ASC;";
+				sql = "SELECT " + 
+						"rReserv.IdRoomReservation, " + 
+						"rReserv.CheckInDate, " + 
+						"rReserv.CheckOuntDate, " + 
+						"rStatus.RoomNumber, " + 
+						"rType.Price, " + 
+						"iType.InstantTypeName, " + 
+						"iDetail.Quantity, " + 
+						"iType.InstantTypePrice AS InstantPrice, " +  
+						"rReserv.RoomReservationStatus " + 
+						"(SELECT Discount FROM RoomReservation,Events WHERE RoomReservation.CheckInDate BETWEEN Events_Start_Datetime AND Events_End_Datetime ORDER BY Discount ASC LIMIT 1) AS Discount" +
+						"FROM RoomReservation AS rReserv " + 
+						"LEFT JOIN RoomType AS rType " + 
+						"ON rReserv.IdRoomType = rType.IdRoomType " + 
+						"LEFT JOIN RoomStatus AS rStatus " + 
+						"ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " + 
+						"LEFT JOIN InstantDetail AS iDetail " + 
+						"ON rStatus.IdRoomStatus = iDetail.IdRoomStatus " + 
+						"LEFT JOIN InstantType AS iType " + 
+						"ON iDetail.IdInstantType = iType.IdInstantType " + 
+						"WHERE rReserv.IdCustomer = 1 " + 
+						"ORDER BY rReserv.CheckInDate ASC;";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, userId);
 		
@@ -64,20 +61,16 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				String checkInDate = Common.getFmtdDateToStr(rs.getDate(2));
 				String checkOuntDate = Common.getFmtdDateToStr(rs.getDate(3));
 				String roomNumber = rs.getString(4);
-				String roomLevel = rs.getString(5);
-				String roomType = rs.getString(6);
-				String price = String.valueOf(rs.getInt(7));
-				String diningTypeName = rs.getString(8);
-				String quantity = String.valueOf(rs.getInt(9));
-				String dtPrice = String.valueOf(rs.getInt(10));
-				String discount = String.valueOf(rs.getFloat(11));
-				String roomReservationStatus = rs.getString(12);
+				String price = String.valueOf(rs.getInt(5));
+				String diningTypeName = rs.getString(6);
+				String quantity = String.valueOf(rs.getInt(7));
+				String dtPrice = String.valueOf(rs.getInt(8));
+				String roomReservationStatus = rs.getString(9);
+				String discount = String.valueOf(rs.getFloat(10));
 				
-				OrderDetail detail = new OrderDetail(roomNumber, roomLevel, roomType, price, diningTypeName,
-						quantity, dtPrice, discount);
+				OrderDetail detail = new OrderDetail(roomNumber, price, diningTypeName, quantity, dtPrice, discount);
 				orderDetailList.add(detail);
-				Order order = new Order(idRoomReservation, checkInDate,
-						checkOuntDate,roomReservationStatus,orderDetailList);
+				Order order = new Order(idRoomReservation, checkInDate, checkOuntDate,roomReservationStatus,orderDetailList);
 				orderList.add(order);
 			}
 		} catch (SQLException e) {
@@ -104,8 +97,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, roomReservationStatus);
 			ps.setInt(2, Integer.parseInt(idRoomReservation));
