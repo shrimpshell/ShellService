@@ -130,7 +130,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	@Override
 	public int updateReview(Rating rating) {
 		String sql = "UPDATE Rating "
-				+ "SET Review = ? WHERE IdRating = ?;";
+				+ "SET Review = ? WHERE IdRoomReservation = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		int count = 0;
@@ -139,7 +139,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 					Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, rating.getReview());
-			ps.setInt(2, rating.getIdRating());
+			ps.setInt(2, rating.getIdRoomReservation());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
