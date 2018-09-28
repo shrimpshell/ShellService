@@ -54,11 +54,33 @@ public class RoomTypeServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<RoomType> rooms = roomTypeDao.getAll();
 			writeText(response, gson.toJson(rooms));
+		} else if (action.equals("getFive")) {
+			List<RoomType> rooms = roomTypeDao.getFive();
+			writeText(response, gson.toJson(rooms));
 		} else if (action.equals("getReservation")) {
 			String checkInDate = jsonObject.get("checkInDate").getAsString();
 			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
 			List<RoomType> rooms = roomTypeDao.getReservation(checkInDate, checkOutDate);
 			writeText(response, gson.toJson(rooms));
+		} else if (action.equals("roomInsert") || action.equals("roomUpdate")) {
+			String spotJson = jsonObject.get("room").getAsString();
+			RoomType room = gson.fromJson(spotJson, RoomType.class);
+			
+			String imageBase64 = jsonObject.get("imageBase64").getAsString();
+			byte[] image = null;
+			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
+			
+			int count = 0;
+			if (action.equals("roomInsert")) {
+				count = roomTypeDao.insert(room, image);
+				writeText(response, String.valueOf(count));
+			} else if (action.equals("roomUpdate")) {
+				count = roomTypeDao.update(room, image);
+				writeText(response, String.valueOf(count));
+			} else {
+				writeText(response, "");
+			}
+			
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("imageId").getAsInt();
@@ -72,6 +94,11 @@ public class RoomTypeServlet extends HttpServlet {
 			} catch (NullPointerException e) {
 				writeText(response, "no image");
 			}
+		} else if (action.equals("roomRemove")) {
+			String roomJson = jsonObject.get("room").getAsString();
+			RoomType room = gson.fromJson(roomJson, RoomType.class);
+			int count = roomTypeDao.delete(room.getId());
+			writeText(response, String.valueOf(count));
 		}
 
 		

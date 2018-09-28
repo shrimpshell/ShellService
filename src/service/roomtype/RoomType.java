@@ -83,4 +83,12 @@ public class RoomType {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getDetail() {
+		String str = "房間型號：" + this.getRoomSize() + "\n" +
+					"床型：" + this.getBed() + "\n" +
+					"大人人數：" + this.getAdultQuantity() + "\n" +
+					"小孩人數：" + this.getChildQuantity() + "\n" +
+					"定價：＄" + this.getPrice();
+		return "房間資訊\n" + str;
+	}
 }
