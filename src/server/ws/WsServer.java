@@ -34,6 +34,7 @@ import com.google.gson.Gson;
 import server.ws.ChatMessage;
 
 
+
 @ServerEndpoint("/WsServer/{userId}/{groupId}")
 public class WsServer {
 	private static Map<String, User> sessionsMap = new ConcurrentHashMap<>();
@@ -63,11 +64,9 @@ public class WsServer {
 		String text1 = String.format("Message received: %s%n ", message + " Connection OK");
 		System.out.println(text1);
 		
-		String receiverId = chatMessage.getReceiverId();
 		String senderGroupId = chatMessage.getSenderGroupId();
 		System.out.println("TESTWS : " +senderGroupId);
 		String receiverGroupId = chatMessage.getReceiverGroupId();
-		User userIds = sessionsMap.get(receiverId);
 		Collection<User> users = sessionsMap.values();
 		// groupId => 0:Customer 1:Clean 2:RoomService 3:Dinling
 		switch (senderGroupId) {
@@ -124,7 +123,7 @@ public class WsServer {
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason){
 		
-
+	
 		String text = String.format("Session ID = %s, disconnected; close code = %d%n ",
 				userSession.getId(),reason.getCloseCode().getCode());
 		System.out.println(text);
