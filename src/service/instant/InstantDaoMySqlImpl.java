@@ -63,12 +63,9 @@ public class InstantDaoMySqlImpl implements InstantDao{
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
-			ps = connection.prepareStatement(sql);
-			System.out.println("TEST3: " + ps);
-			ps.setInt(1, status);
-			System.out.println("TEST4: " + ps);
-			ps.setInt(2, idInstantDetail);
-			System.out.println("TEST5: " + ps);
+			ps = connection.prepareStatement(sql);	
+			ps.setInt(1, status);		
+			ps.setInt(2, idInstantDetail);		
 			count = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
