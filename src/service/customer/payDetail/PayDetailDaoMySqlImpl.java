@@ -43,7 +43,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"LEFT JOIN Rating AS rating " +
 				"ON rReserv.IdRoomReservation = rating.IdRoomReservation" +
 				"WHERE rReserv.IdCustomer = ? " + 
-				"ORDER BY rReserv.CheckInDate ASC;";
+				"ORDER BY rReserv.CheckInDate DESC;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		try {
@@ -99,7 +99,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"LEFT JOIN InstantType AS iType " + 
 				"ON iDetail.IdInstantType = iType.IdInstantType " + 
 				"WHERE rReserv.IdCustomer = ? " + 
-				"ORDER BY rReserv.CheckInDate ASC;";
+				"ORDER BY rReserv.CheckInDate DESC;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		try {
