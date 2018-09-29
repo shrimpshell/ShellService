@@ -2,8 +2,6 @@ package service.customer.payDetail;
 
 public class OrderDetail {
 	private String roomNumber;// 房號Ø
-	private String roomLevel;// 房間等級
-	private String roomType;// 房型名稱
 	private String price;// 房間價格
 	private String diningTypeName;// 餐點名稱
 	private String quantity;// 餐點數量
@@ -14,72 +12,33 @@ public class OrderDetail {
 		super();
 	}
 
-	public OrderDetail(String roomNumber, String roomLevel, String roomType, String price, String diningTypeName,
-			String quantity, String dtPrice, String discount) {
+	public OrderDetail(String roomNumber, String price, String diningTypeName, String quantity, String dtPrice, String discount) {
 		this.roomNumber = roomNumber;
-		this.roomLevel = roomLevel;
-		this.roomType = roomType;
 		this.price = price;
 		this.diningTypeName = diningTypeName;
 		this.quantity = quantity;
 		this.dtPrice = dtPrice;
-		this.discount = discount;
+		this.discount = discount == null ? "1.0" : discount;
 	}
 	
 	public String getRoomNumber() {
 		return roomNumber;
 	}
 
-	public void setRoomNumber(String roomNumber) {
-		this.roomNumber = roomNumber;
-	}
-
-	public String getRoomLevel() {
-		return roomLevel;
-	}
-
-	public void setRoomLevel(String roomLevel) {
-		this.roomLevel = roomLevel;
-	}
-
-	public String getRoomType() {
-		return roomType;
-	}
-
-	public void setRoomType(String roomType) {
-		this.roomType = roomType;
-	}
-
 	public String getPrice() {
 		return price;
-	}
-
-	public void setPrice(String price) {
-		this.price = price;
 	}
 
 	public String getDiningTypeName() {
 		return diningTypeName;
 	}
 
-	public void setDiningTypeName(String diningTypeName) {
-		this.diningTypeName = diningTypeName;
-	}
-
 	public String getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(String quantity) {
-		this.quantity = quantity;
-	}
-
 	public String getDtPrice() {
 		return dtPrice;
-	}
-
-	public void setDtPrice(String dtPrice) {
-		this.dtPrice = dtPrice;
 	}
 
 	public String getDiscount() {
