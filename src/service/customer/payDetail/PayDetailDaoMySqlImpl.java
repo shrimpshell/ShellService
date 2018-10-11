@@ -27,6 +27,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 		OrderRoomDetail orderRoomDetail = null;
 		String sql = "SELECT " + 
 				"rReserv.IdRoomReservation, " + 
+				"rReserv.RoomGroup," +
 				"rReserv.CheckInDate, " + 
 				"rReserv.CheckOuntDate, " + 
 				"rStatus.RoomNumber, " + 
@@ -143,6 +144,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			String sql;
 				sql = "SELECT " + 
 						"rReserv.IdRoomReservation, " + 
+						"rReserv.RoomGroup," +
 						"rReserv.CheckInDate, " + 
 						"rReserv.CheckOuntDate, " + 
 						"rStatus.RoomNumber, " + 
