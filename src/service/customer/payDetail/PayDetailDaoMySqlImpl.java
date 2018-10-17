@@ -89,7 +89,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"iType.InstantTypeName, " + 
 				"iDetail.Quantity, " + 
 				"iType.InstantTypePrice AS InstantPrice, " +  
-				"rReserv.RoomReservationStatus " + 
+				"rReserv.RoomGroup " + 
 				"FROM RoomReservation AS rReserv " + 
 				"LEFT JOIN RoomType AS rType " + 
 				"ON rReserv.IdRoomType = rType.IdRoomType " + 
@@ -204,16 +204,16 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 	}
 
 	@Override
-	public int updateRoomReservationStatusById(String roomReservationStatus, String idRoomReservation ) {
+	public int updateRoomReservationStatusById(String roomReservationStatus, String roomGroup ) {
 		int count = 0;
-		String sql = "UPDATE RoomReservation SET RoomReservationStatus = ? WHERE idRoomReservation = ?;";
+		String sql = "UPDATE RoomReservation SET RoomReservationStatus = ? WHERE RoomGroup = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, roomReservationStatus);
-			ps.setInt(2, Integer.parseInt(idRoomReservation));
+			ps.setString(2, roomGroup);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
