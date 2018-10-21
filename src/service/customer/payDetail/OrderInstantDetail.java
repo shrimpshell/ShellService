@@ -1,13 +1,13 @@
 package service.customer.payDetail;
 
 public class OrderInstantDetail {
-	private String diningTypeName, quantity, dtPrice, roomReservationStatus;
+	private String diningTypeName, quantity, dtPrice, roomGroup;
 
-	public OrderInstantDetail(String diningTypeName, String quantity, String dtPrice, String roomReservationStatus) {
+	public OrderInstantDetail(String diningTypeName, String quantity, String dtPrice, String roomGroup) {
 		this.diningTypeName = diningTypeName;
 		this.quantity = quantity;
 		this.dtPrice = dtPrice;
-		this.roomReservationStatus = roomReservationStatus;
+		this.roomGroup = roomGroup;
 	}
 
 	public String getDiningTypeName() {
@@ -22,8 +22,8 @@ public class OrderInstantDetail {
 		return dtPrice;
 	}
 
-	public String getRoomReservationStatus() {
-		return roomReservationStatus;
+	public String getRoomGroup() {
+		return roomGroup;
 	}
 	
 }

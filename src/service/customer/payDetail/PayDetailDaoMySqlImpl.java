@@ -15,7 +15,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 	public PayDetailDaoMySqlImpl() {
 		super();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -35,14 +35,14 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"rType.RoomTypeName, " +
 				"rReserv.roomQuantity, " +
 				"rReserv.RoomReservationStatus, " +
-				"rating.ratingStatus" +
+				"rating.ratingStatus " +
 				"FROM RoomReservation AS rReserv " + 
 				"LEFT JOIN RoomType AS rType " + 
 				"ON rReserv.IdRoomType = rType.IdRoomType " + 
 				"LEFT JOIN RoomStatus AS rStatus " + 
 				"ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " + 
 				"LEFT JOIN Rating AS rating " +
-				"ON rReserv.IdRoomReservation = rating.IdRoomReservation" +
+				"ON rReserv.IdRoomReservation = rating.IdRoomReservation " +
 				"WHERE rReserv.IdCustomer = ? " + 
 				"ORDER BY rReserv.CheckInDate DESC;";
 		Connection conn = null;
@@ -54,14 +54,15 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int idRoomReservation = rs.getInt(1);
-				String checkInDate = Common.getFmtdDateToStr(rs.getDate(2));
-				String checkOuntDate = Common.getFmtdDateToStr(rs.getDate(3));
-				String roomNumber = rs.getString(4);
-				String price = String.valueOf(rs.getInt(5));
-				String roomTypeName = rs.getString(6);
-				String roomQuantity = String.valueOf(rs.getInt(7));
-				String roomReservationStatus = rs.getString(8);
-				orderRoomDetail = new OrderRoomDetail(idRoomReservation, checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus);
+				String roomGroup = rs.getString(2);
+				String checkInDate = Common.getFmtdDateToStr(rs.getDate(3));
+				String checkOuntDate = Common.getFmtdDateToStr(rs.getDate(4));
+				String roomNumber = rs.getString(5);
+				String price = String.valueOf(rs.getInt(6));
+				String roomTypeName = rs.getString(7);
+				String roomQuantity = String.valueOf(rs.getInt(8));
+				String roomReservationStatus = rs.getString(9);
+				orderRoomDetail = new OrderRoomDetail(idRoomReservation, roomGroup, checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus);
 				orderRoomDetailList.add(orderRoomDetail);
 			}
 		} catch (SQLException e) {
@@ -112,8 +113,8 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				String diningTypeName = rs.getString(1);
 				String quantity = String.valueOf(rs.getInt(2));
 				String dtPrice = String.valueOf(rs.getInt(3));
-				String roomReservationStatus = rs.getString(4);
-				orderInstantDetail = new OrderInstantDetail(diningTypeName, quantity, dtPrice, roomReservationStatus);
+				String roomGroup = rs.getString(4);
+				orderInstantDetail = new OrderInstantDetail(diningTypeName, quantity, dtPrice, roomGroup);
 				orderInstantDetailList.add(orderInstantDetail);
 			}
 		} catch (SQLException e) {
