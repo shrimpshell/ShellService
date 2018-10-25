@@ -205,7 +205,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 	}
 
 	@Override
-	public int updateRoomReservationStatusById(String roomReservationStatus, String roomGroup ) {
+	public int updateRoomReservationStatusById(String roomReservationStatus, String roomGroup) {
 		int count = 0;
 		String sql = "UPDATE RoomReservation SET RoomReservationStatus = ? WHERE RoomGroup = ?;";
 		Connection connection = null;
@@ -216,6 +216,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			ps.setString(1, roomReservationStatus);
 			ps.setString(2, roomGroup);
 			count = ps.executeUpdate();
+			return count;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
