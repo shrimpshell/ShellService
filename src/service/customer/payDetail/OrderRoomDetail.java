@@ -2,9 +2,9 @@ package service.customer.payDetail;
 
 public class OrderRoomDetail {
 	private int idRoomReservation;
-	private String checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus, roomGroup;
+	private String checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus, roomGroup, ratingStatus;
 	public OrderRoomDetail(int idRoomReservation, String roomGroup, String checkInDate, String checkOuntDate,
-			String roomNumber, String price, String roomQuantity, String RoomTypeName, String roomReservationStatus) {
+			String roomNumber, String price, String roomQuantity, String RoomTypeName, String roomReservationStatus, String ratingStatus) {
 		super();
 		this.idRoomReservation = idRoomReservation;
 		this.roomGroup = roomGroup;
@@ -15,6 +15,10 @@ public class OrderRoomDetail {
 		this.roomQuantity = roomQuantity;
 		this.roomTypeName = RoomTypeName;
 		this.roomReservationStatus = roomReservationStatus;
+		this.ratingStatus = ratingStatus;
+	}
+	public String getRatingStatus() {
+		return ratingStatus;
 	}
 	public String getRoomGroup() {
 		return roomGroup;
