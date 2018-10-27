@@ -144,6 +144,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 			if (rs.next()) {
 				image = rs.getBytes(1);
 			}
+			System.out.println(image);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -118,8 +118,13 @@ public class EmployeeServlet extends HttpServlet {
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);
-		PrintWriter out = response.getWriter();
-		out.print(outText);
-		System.out.println("output: " + outText);
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(outText);
+			System.out.println("output: " + outText);
+		} catch(IllegalStateException e) {
+			System.out.println("output: null");
+		}
+		
 	}
 }
