@@ -20,7 +20,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	public RatingDaoMySqlImpl() {
 		super();
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("org.mariadb.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

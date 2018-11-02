@@ -16,7 +16,7 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 	public EmployeeDaoMySqlImpl() {
 		super();
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("org.mariadb.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -1,12 +1,12 @@
 package service.customer;
 
-import java.sql.Blob;
+import org.mariadb.jdbc.*;
 
 public class Customer {
 	private String CustomerID, Name, Email, Password, Gender, Phone, Address, Birthday;
 	private int discount;
 	private int IdCustomer;
-	private Blob CustomerPic;
+	private MariaDbBlob CustomerPic;
 
 
 	
@@ -50,7 +50,7 @@ public class Customer {
 	}
 	
 	public Customer (int IdCustomer, String customerID, String name, String email, 
-			String password, String gender, String birthday, String phone, String address, int discount, Blob customerPic){
+			String password, String gender, String birthday, String phone, String address, int discount, MariaDbBlob customerPic){
 		super();
 		this.IdCustomer = IdCustomer;
 		this.CustomerID = customerID;
@@ -121,10 +121,10 @@ public class Customer {
 	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
-	public Blob getCustomerPic() {
+	public MariaDbBlob getCustomerPic() {
 		return CustomerPic;
 	}
-	public void setCustomerPic(Blob customerPic) {
+	public void setCustomerPic(MariaDbBlob customerPic) {
 		CustomerPic = customerPic;
 	}
 	public int getIdCustomer() {
