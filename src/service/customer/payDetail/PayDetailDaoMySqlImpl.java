@@ -15,7 +15,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 	public PayDetailDaoMySqlImpl() {
 		super();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -27,20 +27,24 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 		OrderRoomDetail orderRoomDetail = null;
 		String sql = "SELECT " + 
 				"rReserv.IdRoomReservation, " + 
+				"rReserv.RoomGroup," +
 				"rReserv.CheckInDate, " + 
 				"rReserv.CheckOuntDate, " + 
 				"rStatus.RoomNumber, " + 
 				"rType.Price, " + 
 				"rType.RoomTypeName, " +
-				"rReserv.roomQuantity " +
-				"rReserv.RoomReservationStatus " + 
+				"rReserv.roomQuantity, " +
+				"rReserv.RoomReservationStatus, " +
+				"rating.ratingStatus " +
 				"FROM RoomReservation AS rReserv " + 
 				"LEFT JOIN RoomType AS rType " + 
 				"ON rReserv.IdRoomType = rType.IdRoomType " + 
 				"LEFT JOIN RoomStatus AS rStatus " + 
 				"ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " + 
-				"WHERE rReserv.IdCustomer = 1 " + 
-				"ORDER BY rReserv.CheckInDate ASC;";
+				"LEFT JOIN Rating AS rating " +
+				"ON rReserv.IdRoomReservation = rating.IdRoomReservation " +
+				"WHERE rReserv.IdCustomer = ? " + 
+				"ORDER BY rReserv.CheckInDate DESC;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		try {
@@ -50,14 +54,16 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int idRoomReservation = rs.getInt(1);
-				String checkInDate = Common.getFmtdDateToStr(rs.getDate(2));
-				String checkOuntDate = Common.getFmtdDateToStr(rs.getDate(3));
-				String roomNumber = rs.getString(4);
-				String price = String.valueOf(rs.getInt(5));
-				String roomTypeName = rs.getString(6);
-				String roomQuantity = String.valueOf(rs.getInt(7));
-				String roomReservationStatus = rs.getString(8);
-				orderRoomDetail = new OrderRoomDetail(idRoomReservation, checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus);
+				String roomGroup = rs.getString(2);
+				String checkInDate = Common.getFmtdDateToStr(rs.getDate(3));
+				String checkOuntDate = Common.getFmtdDateToStr(rs.getDate(4));
+				String roomNumber = rs.getString(5);
+				String price = String.valueOf(rs.getInt(6));
+				String roomTypeName = rs.getString(7);
+				String roomQuantity = String.valueOf(rs.getInt(8));
+				String roomReservationStatus = rs.getString(9);
+				String ratingStatus = rs.getString(10);
+				orderRoomDetail = new OrderRoomDetail(idRoomReservation, roomGroup, checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus, ratingStatus);
 				orderRoomDetailList.add(orderRoomDetail);
 			}
 		} catch (SQLException e) {
@@ -85,7 +91,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"iType.InstantTypeName, " + 
 				"iDetail.Quantity, " + 
 				"iType.InstantTypePrice AS InstantPrice, " +  
-				"rReserv.RoomReservationStatus " + 
+				"rReserv.RoomGroup " + 
 				"FROM RoomReservation AS rReserv " + 
 				"LEFT JOIN RoomType AS rType " + 
 				"ON rReserv.IdRoomType = rType.IdRoomType " + 
@@ -95,8 +101,8 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"ON rStatus.IdRoomStatus = iDetail.IdRoomStatus " + 
 				"LEFT JOIN InstantType AS iType " + 
 				"ON iDetail.IdInstantType = iType.IdInstantType " + 
-				"WHERE rReserv.IdCustomer = 1 AND iType.InstantTypeName IS NOT NULL" + 
-				"ORDER BY rReserv.CheckInDate ASC;";
+				"WHERE rReserv.IdCustomer = ? " + 
+				"ORDER BY rReserv.CheckInDate DESC;";
 		Connection conn = null;
 		PreparedStatement ps = null;
 		try {
@@ -108,8 +114,8 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				String diningTypeName = rs.getString(1);
 				String quantity = String.valueOf(rs.getInt(2));
 				String dtPrice = String.valueOf(rs.getInt(3));
-				String roomReservationStatus = rs.getString(4);
-				orderInstantDetail = new OrderInstantDetail(diningTypeName, quantity, dtPrice, roomReservationStatus);
+				String roomGroup = rs.getString(4);
+				orderInstantDetail = new OrderInstantDetail(diningTypeName, quantity, dtPrice, roomGroup);
 				orderInstantDetailList.add(orderInstantDetail);
 			}
 		} catch (SQLException e) {
@@ -140,6 +146,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			String sql;
 				sql = "SELECT " + 
 						"rReserv.IdRoomReservation, " + 
+						"rReserv.RoomGroup," +
 						"rReserv.CheckInDate, " + 
 						"rReserv.CheckOuntDate, " + 
 						"rStatus.RoomNumber, " + 
@@ -158,8 +165,8 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 						"ON rStatus.IdRoomStatus = iDetail.IdRoomStatus " + 
 						"LEFT JOIN InstantType AS iType " + 
 						"ON iDetail.IdInstantType = iType.IdInstantType " + 
-						"WHERE rReserv.IdCustomer = 1 " + 
-						"ORDER BY rReserv.CheckInDate ASC;";
+						"WHERE rReserv.IdCustomer = ? " + 
+						"ORDER BY rReserv.CheckInDate DESC;";
 				ps = conn.prepareStatement(sql);
 				ps.setString(1, userId);
 		
@@ -199,17 +206,18 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 	}
 
 	@Override
-	public int updateRoomReservationStatusById(String roomReservationStatus, String idRoomReservation ) {
+	public int updateRoomReservationStatusById(String roomReservationStatus, String roomGroup) {
 		int count = 0;
-		String sql = "UPDATE RoomReservation SET RoomReservationStatus = ? WHERE idRoomReservation = ?;";
+		String sql = "UPDATE RoomReservation SET RoomReservationStatus = ? WHERE RoomGroup = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, roomReservationStatus);
-			ps.setInt(2, Integer.parseInt(idRoomReservation));
+			ps.setString(2, roomGroup);
 			count = ps.executeUpdate();
+			return count;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -262,5 +270,117 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			}
 		}
 		return discount;
+	}
+
+	@Override
+	public List<OrderRoomDetail> viewRoomPayDetailByEmployee() {
+		List<OrderRoomDetail> orderRoomDetailList = new ArrayList<>();
+		OrderRoomDetail orderRoomDetail = null;
+		String sql = "SELECT " + 
+				"rReserv.IdRoomReservation, " + 
+				"rReserv.RoomGroup," +
+				"rReserv.CheckInDate, " + 
+				"rReserv.CheckOuntDate, " + 
+				"rStatus.RoomNumber, " + 
+				"rType.Price, " + 
+				"rType.RoomTypeName, " +
+				"rReserv.roomQuantity, " +
+				"rReserv.RoomReservationStatus, " +
+				"rating.ratingStatus " +
+				"FROM RoomReservation AS rReserv " + 
+				"LEFT JOIN RoomType AS rType " + 
+				"ON rReserv.IdRoomType = rType.IdRoomType " + 
+				"LEFT JOIN RoomStatus AS rStatus " + 
+				"ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " + 
+				"LEFT JOIN Rating AS rating " +
+				"ON rReserv.IdRoomReservation = rating.IdRoomReservation " +
+				"WHERE rReserv.RoomReservationStatus != 3 " + 
+				"ORDER BY rReserv.CheckInDate DESC;";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int idRoomReservation = rs.getInt(1);
+				String roomGroup = rs.getString(2);
+				String checkInDate = Common.getFmtdDateToStr(rs.getDate(3));
+				String checkOuntDate = Common.getFmtdDateToStr(rs.getDate(4));
+				String roomNumber = rs.getString(5);
+				String price = String.valueOf(rs.getInt(6));
+				String roomTypeName = rs.getString(7);
+				String roomQuantity = String.valueOf(rs.getInt(8));
+				String roomReservationStatus = rs.getString(9);
+				String ratingStatus = rs.getString(10);
+				orderRoomDetail = new OrderRoomDetail(idRoomReservation, roomGroup, checkInDate, checkOuntDate, roomNumber, price, roomQuantity, roomTypeName, roomReservationStatus, ratingStatus);
+				orderRoomDetailList.add(orderRoomDetail);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return orderRoomDetailList;
+	}
+
+	@Override
+	public List<OrderInstantDetail> viewInstantPayDetailByEmployee() {
+		List<OrderInstantDetail> orderInstantDetailList = new ArrayList<>();
+		OrderInstantDetail orderInstantDetail = null;
+		String sql = "SELECT " + 
+				"iType.InstantTypeName, " + 
+				"iDetail.Quantity, " + 
+				"iType.InstantTypePrice AS InstantPrice, " +  
+				"rReserv.RoomGroup " + 
+				"FROM RoomReservation AS rReserv " + 
+				"LEFT JOIN RoomType AS rType " + 
+				"ON rReserv.IdRoomType = rType.IdRoomType " + 
+				"LEFT JOIN RoomStatus AS rStatus " + 
+				"ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " + 
+				"LEFT JOIN InstantDetail AS iDetail " + 
+				"ON rStatus.IdRoomStatus = iDetail.IdRoomStatus " + 
+				"LEFT JOIN InstantType AS iType " + 
+				"ON iDetail.IdInstantType = iType.IdInstantType " + 
+				"WHERE rReserv.RoomReservationStatus != 3 " + 
+				"ORDER BY rReserv.CheckInDate DESC;";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String instantTypeName = rs.getString(1);
+				String quantity = String.valueOf(rs.getInt(2));
+				String instantPrice = String.valueOf(rs.getInt(3));
+				String roomGroup = rs.getString(4);
+				orderInstantDetail = new OrderInstantDetail(instantTypeName, quantity, instantPrice, roomGroup);
+				orderInstantDetailList.add(orderInstantDetail);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return orderInstantDetailList;
 	}
 }

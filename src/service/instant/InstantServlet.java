@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import service.employee.Employees;
+
 
 
 
@@ -59,9 +59,7 @@ public class InstantServlet extends HttpServlet {
 		} else if (action.equals("updateStatus")) {
 			int count = 0;
 			int idInstantDetail = jsonObject.get("idInstantDetail").getAsInt();
-			System.out.println("TEST1: " + idInstantDetail);
 			int status = jsonObject.get("status").getAsInt();
-			System.out.println("TEST2: " + status);
 			count = instantDao.updateStatus(idInstantDetail, status);
 			writeText(response, String.valueOf(count));
 		} else if (action.equals("getEmployeeStatus")) {

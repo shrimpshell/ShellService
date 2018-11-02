@@ -34,16 +34,18 @@ import com.google.gson.Gson;
 import server.ws.ChatMessage;
 
 
+
 @ServerEndpoint("/WsServer/{userId}/{groupId}")
 public class WsServer {
 	private static Map<String, User> sessionsMap = new ConcurrentHashMap<>();
 	Gson gson = new Gson();
+	User user;
 	
 	@OnOpen
 	public void onOpen(@PathParam("userId") String userId,
 			@PathParam("groupId") String groupId, Session userSession) throws IOException {
 		
-		User user = new User(userSession, groupId); // 類別存放 userSession groupId 並建立實體
+		user = new User(userSession, groupId); // 類別存放 userSession groupId 並建立實體
 		
 		sessionsMap.put(userId, user); // Map存放userId和user物件
 	
@@ -63,11 +65,9 @@ public class WsServer {
 		String text1 = String.format("Message received: %s%n ", message + " Connection OK");
 		System.out.println(text1);
 		
-		String receiverId = chatMessage.getReceiverId();
 		String senderGroupId = chatMessage.getSenderGroupId();
 		System.out.println("TESTWS : " +senderGroupId);
 		String receiverGroupId = chatMessage.getReceiverGroupId();
-		User userIds = sessionsMap.get(receiverId);
 		Collection<User> users = sessionsMap.values();
 		// groupId => 0:Customer 1:Clean 2:RoomService 3:Dinling
 		switch (senderGroupId) {
@@ -123,8 +123,13 @@ public class WsServer {
 	
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason){
-		
-
+		Set<String> userIds = sessionsMap.keySet();
+		for (String userId : userIds) {
+			if(sessionsMap.get(userId).getSession().equals(userSession)) {
+				sessionsMap.remove(userId);
+			}
+		}
+	
 		String text = String.format("Session ID = %s, disconnected; close code = %d%n ",
 				userSession.getId(),reason.getCloseCode().getCode());
 		System.out.println(text);

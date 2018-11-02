@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.Common;
-import service.event.Events;
-import service.room.Room;
 
 public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 
@@ -21,17 +19,105 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 
 	@Override
 	public int insert(RoomType room, byte[] image) {
-		return 0;
+		int count = 0;
+		String sql = "INSERT INTO RoomType " + 
+				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price, RoomPic) " +
+				"VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?)";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, room.getName());
+			ps.setString(2, room.getRoomSize());
+			ps.setString(3, room.getBed());
+			ps.setInt(4, room.getAdultQuantity());
+			ps.setInt(5, room.getChildQuantity());
+			ps.setInt(6, room.getRoomQuantity());
+			ps.setInt(7, room.getPrice());
+			ps.setBytes(8, image != null ? image : null);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 	@Override
 	public int update(RoomType room, byte[] image) {
-		return 0;
+		int count = 0;
+		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSize = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ?, RoomPic = ? WHERE IdRoomType = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, room.getName());
+			ps.setString(2, room.getRoomSize());
+			ps.setString(3, room.getBed());
+			ps.setInt(4, room.getAdultQuantity());
+			ps.setInt(5, room.getChildQuantity());
+			ps.setInt(6, room.getRoomQuantity());
+			ps.setInt(7, room.getPrice());
+			ps.setBytes(8, image != null ? image : null);
+			ps.setInt(9, room.getId());
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 	@Override
 	public int delete(int id) {
-		return 0;
+		int count = 0;
+		String sql = "DELETE FROM RoomType WHERE IdRoomType = ?";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, id);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 	@Override
@@ -75,7 +161,7 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 
 	@Override
 	public List<RoomType> getAll() {
-		String sql = "SELECT * FROM RoomType ORDER BY `IdRoomType` ASC";
+		String sql = "SELECT * FROM RoomType ORDER BY `IdRoomType` DESC";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<RoomType> roomList = new ArrayList<RoomType>();
@@ -189,6 +275,47 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 			}
 		}
 		return image;
+	}
+
+	@Override
+	public List<RoomType> getFive() {
+		String sql = "SELECT * FROM RoomType ORDER BY IdRoomType DESC LIMIT 5";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<RoomType> roomList = new ArrayList<RoomType>();
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String roomSize = rs.getString(3);
+				String bed = rs.getString(4);
+				int adult = rs.getInt(5);
+				int child = rs.getInt(6);
+				int roomNum = rs.getInt(7);
+				int price = rs.getInt(8);
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price);
+				roomList.add(room);
+			}
+			return roomList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return roomList;
 	}
 
 }
