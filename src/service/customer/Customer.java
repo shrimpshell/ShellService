@@ -1,6 +1,6 @@
 package service.customer;
 
-import com.mysql.cj.jdbc.Blob;
+import java.sql.Blob;
 
 public class Customer {
 	private String CustomerID, Name, Email, Password, Gender, Phone, Address, Birthday;

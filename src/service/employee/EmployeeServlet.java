@@ -58,7 +58,7 @@ public class EmployeeServlet extends HttpServlet {
 		} else if (action.equals("getAll")) {
 			List<Employees> events = employeeDao.getAll();
 			writeText(response, gson.toJson(events));
-		} else if (action.equals("getImage")) {
+		} else if (action.equals("getImage")) { 
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("IdEmployee").getAsInt();
 			byte[] image = employeeDao.getImage(id);
