@@ -109,7 +109,7 @@ public class InstantDaoMySqlImpl implements InstantDao{
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int IdInstantDetail = rs.getInt(1), IdInstantService = rs.getInt(2), Status = rs.getInt(4), Quantity = rs.getInt(5), 
-						IdInstantType = rs.getInt(6), IdRoomStatus = rs.getInt(6);		
+						IdInstantType = rs.getInt(6), IdRoomStatus = rs.getInt(7);		
 				String RoomNumber = rs.getString(3);
 				Instant instant = new Instant
 				(IdInstantDetail, IdInstantService, RoomNumber, Status, Quantity, IdInstantType, IdRoomStatus);
@@ -135,7 +135,7 @@ public class InstantDaoMySqlImpl implements InstantDao{
 
 	@Override
 	public List<Instant> getCustomerStatus(String roomNumber) {
-		String sql = "SELECT IdInstantDetail, IdInstantService, RoomNumber, Status, Quantity, IdInstantType "
+		String sql = "SELECT IdInstantDetail, IdInstantService, RoomNumber, Status, Quantity, IdInstantType, IdRoomStatus "
 				+ "FROM db_cp102b.InstantDetail "
 				+ "WHERE Status <>1 AND RoomNumber = ? ORDER BY IdInstantDetail DESC;";
 		List<Instant> instantList = new ArrayList<Instant>();
@@ -148,7 +148,7 @@ public class InstantDaoMySqlImpl implements InstantDao{
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int IdInstantDetail = rs.getInt(1), IdInstantService = rs.getInt(2), Status = rs.getInt(4), Quantity = rs.getInt(5), 
-						IdInstantType = rs.getInt(6), IdRoomStatus = rs.getInt(6);		
+						IdInstantType = rs.getInt(6), IdRoomStatus = rs.getInt(7);		
 				String RoomNumber = rs.getString(3);
 				Instant instant = new Instant
 				(IdInstantDetail, IdInstantService, RoomNumber, Status, Quantity, IdInstantType, IdRoomStatus);

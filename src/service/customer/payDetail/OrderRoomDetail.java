@@ -17,6 +17,15 @@ public class OrderRoomDetail {
 		this.roomReservationStatus = roomReservationStatus;
 		this.ratingStatus = ratingStatus;
 	}
+	
+
+	public OrderRoomDetail(String roomNumber, String roomReservationStatus) {
+		super();
+		this.roomNumber = roomNumber;
+		this.roomReservationStatus = roomReservationStatus;
+	}
+
+
 	public String getRatingStatus() {
 		return ratingStatus;
 	}

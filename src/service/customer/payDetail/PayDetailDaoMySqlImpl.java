@@ -22,6 +22,49 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 	}
 	
 	@Override
+	public List<OrderRoomDetail> getUserRoomNumber(String userId) {
+		List<OrderRoomDetail> orderRoomDetailList = new ArrayList<>();
+		OrderRoomDetail orderRoomDetail = null;
+		String sql = "SELECT " + "rStatus.RoomNumber, " +
+				  "rReserv.RoomReservationStatus " +
+				  "FROM RoomReservation AS rReserv " +
+				  "LEFT JOIN RoomStatus AS rStatus " +
+				  "ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " +
+				  "WHERE rReserv.IdCustomer = ? " +  
+				  "ORDER BY rReserv.CheckInDate DESC;";
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String roomNumber = rs.getString(1);
+				String roomReservationStatus = rs.getString(2);
+				orderRoomDetail = new OrderRoomDetail(roomNumber, roomReservationStatus);
+				orderRoomDetailList.add(orderRoomDetail);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return orderRoomDetailList;
+	}
+		
+		
+	
+	@Override
 	public List<OrderRoomDetail> getRoomPayDetailById(String userId) {
 		List<OrderRoomDetail> orderRoomDetailList = new ArrayList<>();
 		OrderRoomDetail orderRoomDetail = null;

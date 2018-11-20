@@ -7,7 +7,7 @@ import java.util.Date;
 public class Common {
 
 
-//	public static final String URL = "jdbc:mysql://localhost:3306/shrimpshell";
+	//public static final String URL = "jdbc:mysql://localhost:3306/shrimpshell";
 
 	public static final String URL = "jdbc:mariadb://140.115.236.75:3306/db_cp102b?serverTimezone=UTC";
 	public static final String USERNAME = "cp102b";
