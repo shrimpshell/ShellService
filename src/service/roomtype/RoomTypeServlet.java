@@ -28,8 +28,26 @@ public class RoomTypeServlet extends HttpServlet {
 		if (roomTypeDao == null) {
 			roomTypeDao = new RoomTypeDaoMySqlImpl();
 		}
-		List<RoomType> rooms = roomTypeDao.getAll();
-		writeText(response, new Gson().toJson(rooms));
+		String action = request.getParameter("action");
+		String imageId = request.getParameter("imageId");
+		if (action.equals("getAll")) {
+			List<RoomType> rooms = roomTypeDao.getAll();
+			writeText(response, new Gson().toJson(rooms));
+		} else if (action.equals("getImage")) {
+			OutputStream os = response.getOutputStream();
+			int id = Integer.parseInt(imageId);
+			byte[] image = roomTypeDao.getImage(id);
+			if (image != null) {
+				response.setContentType("image/jpeg");
+				response.setContentLength(image.length);
+			}
+			try {
+				os.write(image);
+			} catch (NullPointerException e) {
+				writeText(response, "no image");
+			}
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
