@@ -363,6 +363,45 @@ public class EmployeeDaoMySqlImpl implements EmployeeDao {
 		return count;
 	}
 
+	@Override
+	public int updateWithoutImage(Employees employee) {
+		int count = 0;
+		String sql = "UPDATE Employee SET " +
+				"EmployeeCode = ?, Name = ?, Password = ?, Email = ?, Gendar = ?, " +
+				"Phone = ?, Adress = ?, IdDepartment = ? " +
+				"WHERE IdEmployee = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, employee.getCode());
+			ps.setString(2, employee.getName());
+			ps.setString(3, employee.getPassword());
+			ps.setString(4, employee.getEmail());
+			ps.setString(5, employee.getGender());
+			ps.setString(6, employee.getPhone());
+			ps.setString(7, employee.getAddress());
+			ps.setInt(8, employee.getDepartmentId());
+			ps.setInt(9, employee.getId());
+			count = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
+	}
+
 	
 
 }
