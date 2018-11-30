@@ -14,6 +14,8 @@ public interface EmployeeDao {
 	
 	int update(Employees employee, byte[] image);
 	
+	int updateWithoutImage(Employees employee);
+	
 	int updateImage(int IdEmployee, byte[] image);
 	
 	int delete(int id);
