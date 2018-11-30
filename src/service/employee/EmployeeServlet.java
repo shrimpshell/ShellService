@@ -113,6 +113,13 @@ public class EmployeeServlet extends HttpServlet {
 			int count = 0;
 			count = employeeDao.updateImage(idEmployee, image);
 			writeText(response, String.valueOf(count));
+		} else if (action.equals("updateWithoutImage")) {
+			int count = 0;
+			String employeeJson = jsonObject.get("employee").getAsString();
+			Employees employee = gson.fromJson(employeeJson, Employees.class);
+			
+			count = employeeDao.updateWithoutImage(employee);
+			writeText(response, String.valueOf(count));
 		}
 	}
 
