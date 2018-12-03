@@ -18,6 +18,14 @@ public interface RatingDao {
 	List<Rating> getAllById(int IdCustomer);
 	
 	List<Rating> getAll();
+	
+	List<Rating> getAllByHighRatingStar();
+	
+	List<Rating> getAllByLowRatingStar();
+	
+	List<Rating> getAllByRatingStatus();
+
+	int getRatingStatus(int IdRoomReservation);
 
 	
 

@@ -66,6 +66,7 @@ public class Customer {
 	}
 	
 	public Customer (String name, String email, String birthday, String phone, String address) {
+		super();	
 		this.Name = name;
 		this.Email = email;
 		this.Birthday = birthday;
