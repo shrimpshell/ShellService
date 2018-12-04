@@ -17,6 +17,18 @@ public class Instant {
 	}
 	
 
+	public Instant(int idInstantDetail, int idInstantService, int status, int quantity, int idInstantType,
+			String roomNumber) {
+		super();
+		IdInstantDetail = idInstantDetail;
+		IdInstantService = idInstantService;
+		Status = status;
+		Quantity = quantity;
+		IdInstantType = idInstantType;
+		RoomNumber = roomNumber;
+	}
+
+
 	public Instant(int idInstantService, String roomNumber, int status, int quantity, int idInstantType, int idRoomStatus) {
 		super();
 		IdInstantService = idInstantService;

@@ -26,7 +26,8 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 		List<OrderRoomDetail> orderRoomDetailList = new ArrayList<>();
 		OrderRoomDetail orderRoomDetail = null;
 		String sql = "SELECT " + "rStatus.RoomNumber, " +
-				  "rReserv.RoomReservationStatus " +
+				  "rReserv.RoomReservationStatus, " +
+				  "rStatus.idRoomStatus " +
 				  "FROM RoomReservation AS rReserv " +
 				  "LEFT JOIN RoomStatus AS rStatus " +
 				  "ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " +
@@ -42,7 +43,8 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 			while (rs.next()) {
 				String roomNumber = rs.getString(1);
 				String roomReservationStatus = rs.getString(2);
-				orderRoomDetail = new OrderRoomDetail(roomNumber, roomReservationStatus);
+				int idRoomStatus = rs.getInt(3);
+				orderRoomDetail = new OrderRoomDetail(roomNumber, roomReservationStatus, idRoomStatus);
 				orderRoomDetailList.add(orderRoomDetail);
 			}
 		} catch (SQLException e) {
