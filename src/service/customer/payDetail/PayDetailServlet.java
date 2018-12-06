@@ -71,6 +71,10 @@ public class PayDetailServlet extends HttpServlet {
 			int count = 0;
 			count = payDetailDao.updateRoomReservationStatusById(roomReservationStatus, roomGroup);
 			writeText(response, String.valueOf(count));
+		} else if (action.equals("getUserRoomNumber")) {
+			String idCustomer = jsonObject.get("idCustomer").getAsString();
+			List<OrderRoomDetail> payRoomDetails = payDetailDao.getUserRoomNumber(idCustomer);
+			writeText(response, gson.toJson(payRoomDetails));
 		}
 	}
 
