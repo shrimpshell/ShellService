@@ -11,5 +11,6 @@ public interface PayDetailDao {
 	List<OrderInstantDetail> viewInstantPayDetailByEmployee();
 	String getDiscount();
 	int updateRoomReservationStatusById(String roomReservationStatus, String idRoomReservation);
+	List<OrderRoomDetail> getUserRoomNumber(String userId);
 
 }

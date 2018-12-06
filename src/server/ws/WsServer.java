@@ -35,7 +35,7 @@ import server.ws.ChatMessage;
 
 
 
-@ServerEndpoint("/WsServer/{userId}/{groupId}")
+@ServerEndpoint("/WsServer/{userId}/{groupId}") //
 public class WsServer {
 	private static Map<String, User> sessionsMap = new ConcurrentHashMap<>();
 	Gson gson = new Gson();
@@ -66,7 +66,7 @@ public class WsServer {
 		System.out.println(text1);
 		
 		String senderGroupId = chatMessage.getSenderGroupId();
-		System.out.println("TESTWS : " +senderGroupId);
+		System.out.println("TESTWS : " + senderGroupId);
 		String receiverGroupId = chatMessage.getReceiverGroupId();
 		Collection<User> users = sessionsMap.values();
 		// groupId => 0:Customer 1:Clean 2:RoomService 3:Dinling
