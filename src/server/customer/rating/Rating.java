@@ -35,7 +35,7 @@ public class Rating {
 	
 	}
 	public Rating(int idRating, Float ratingStar, String time, String opinion, String review, int idRoomReservation,
-			int idCustomer) {
+			int ratingStatus, int idCustomer) {
 		super();
 		IdRating = idRating;
 		this.ratingStar = ratingStar;
@@ -43,6 +43,19 @@ public class Rating {
 		this.opinion = opinion;
 		this.review = review;
 		IdRoomReservation = idRoomReservation;
+		this.ratingStatus = ratingStatus;
+		IdCustomer = idCustomer;
+	}
+	
+	public Rating(int ratingStatus, Float ratingStar, String time, String opinion, String review, int idRoomReservation,
+			 int idCustomer) {
+		super();
+		this.ratingStar = ratingStar;
+		this.time = time;
+		this.opinion = opinion;
+		this.review = review;
+		IdRoomReservation = idRoomReservation;
+		this.ratingStatus = ratingStatus;
 		IdCustomer = idCustomer;
 	}
 	
