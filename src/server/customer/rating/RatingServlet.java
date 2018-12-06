@@ -71,7 +71,18 @@ public class RatingServlet extends HttpServlet {
 		}else if(action.equals("getAll")) {
 			List<Rating> ratings = ratingDao.getAll();
 			writeText(response, gson.toJson(ratings));
-			
+		}else if(action.equals("getAllByHighRatingStar")) {
+			List<Rating> ratings = ratingDao.getAllByHighRatingStar();
+			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getAllByLowRatingStar")) {
+			List<Rating> ratings = ratingDao.getAllByLowRatingStar();
+			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getAllByRatingStatus")) {
+			List<Rating> ratings = ratingDao.getAllByRatingStatus();
+			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getRatingStatus")) {
+			int idRoomReservation = jsonObject.get("IdRoomReservation").getAsInt();
+			writeText(response, String.valueOf(ratingDao.getRatingStatus(idRoomReservation)));
 		}
 	}
 			
