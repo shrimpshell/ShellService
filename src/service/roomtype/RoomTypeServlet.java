@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import common.ImageUtil;
+import service.reservation.Reservation;
 
 @SuppressWarnings("serial")
 @WebServlet("/RoomTypeServlet")
@@ -80,6 +81,12 @@ public class RoomTypeServlet extends HttpServlet {
 			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
 			List<RoomType> rooms = roomTypeDao.getReservation(checkInDate, checkOutDate);
 			writeText(response, gson.toJson(rooms));
+		} else if (action.equals("findByRoomId")) {
+			String checkInDate = jsonObject.get("checkInDate").getAsString();
+			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
+			int roomTypeId = jsonObject.get("roomTypeId").getAsInt();
+			List<RoomType> reservations = roomTypeDao.findByRoomId(checkInDate, checkOutDate, roomTypeId);
+			writeText(response, gson.toJson(reservations));
 		} else if (action.equals("roomInsert") || action.equals("roomUpdate")) {
 			String spotJson = jsonObject.get("room").getAsString();
 			RoomType room = gson.fromJson(spotJson, RoomType.class);
