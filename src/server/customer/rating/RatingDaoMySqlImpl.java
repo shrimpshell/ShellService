@@ -222,7 +222,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 
 //	@Override
 	public List<Rating> getAllById(int IdCustomer) {
-		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation From Customer as A, RoomReservation as B, Rating as C WHERE (A.IdCustomer = ?) And (A.IdCustomer = B.IdCustomer) "
+		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation, C.ratingStatus From Customer as A, RoomReservation as B, Rating as C WHERE (A.IdCustomer = ?) And (A.IdCustomer = B.IdCustomer) "
 				+ "And (B.IdRoomReservation = C.IdRoomReservation) ORDER BY time DESC, IdRating DESC";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -240,7 +240,8 @@ public class RatingDaoMySqlImpl implements RatingDao{
 				String opinion = rs.getString(3);
 				String  review = rs.getString(4);
 				int IdRoomReservation = rs.getInt(5);
-				Rating rating = new Rating(ratingStar, time, opinion, review, IdRoomReservation, IdCustomer);
+				int ratingStatus = rs.getInt(6);
+				Rating rating = new Rating(ratingStatus, ratingStar, time, opinion, review, IdRoomReservation, IdCustomer);
 				ratingList.add(rating);
 			}
 			return ratingList;
