@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import common.ImageUtil;
+import service.reservation.Reservation;
 
 @SuppressWarnings("serial")
 @WebServlet("/RoomTypeServlet")
@@ -28,8 +29,26 @@ public class RoomTypeServlet extends HttpServlet {
 		if (roomTypeDao == null) {
 			roomTypeDao = new RoomTypeDaoMySqlImpl();
 		}
-		List<RoomType> rooms = roomTypeDao.getAll();
-		writeText(response, new Gson().toJson(rooms));
+		String action = request.getParameter("action");
+		String imageId = request.getParameter("imageId");
+		if (action.equals("getAll")) {
+			List<RoomType> rooms = roomTypeDao.getAll();
+			writeText(response, new Gson().toJson(rooms));
+		} else if (action.equals("getImage")) {
+			OutputStream os = response.getOutputStream();
+			int id = Integer.parseInt(imageId);
+			byte[] image = roomTypeDao.getImage(id);
+			if (image != null) {
+				response.setContentType("image/jpeg");
+				response.setContentLength(image.length);
+			}
+			try {
+				os.write(image);
+			} catch (NullPointerException e) {
+				writeText(response, "no image");
+			}
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +81,12 @@ public class RoomTypeServlet extends HttpServlet {
 			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
 			List<RoomType> rooms = roomTypeDao.getReservation(checkInDate, checkOutDate);
 			writeText(response, gson.toJson(rooms));
+		} else if (action.equals("findByRoomId")) {
+			String checkInDate = jsonObject.get("checkInDate").getAsString();
+			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
+			int roomTypeId = jsonObject.get("roomTypeId").getAsInt();
+			List<RoomType> reservations = roomTypeDao.findByRoomId(checkInDate, checkOutDate, roomTypeId);
+			writeText(response, gson.toJson(reservations));
 		} else if (action.equals("roomInsert") || action.equals("roomUpdate")) {
 			String spotJson = jsonObject.get("room").getAsString();
 			RoomType room = gson.fromJson(spotJson, RoomType.class);

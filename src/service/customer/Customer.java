@@ -24,26 +24,26 @@ public class Customer {
 		
 	}
 	
-	public Customer(int IdCustomer, String CustomerID, String Name, String Email, String Gender, 
+	public Customer(int IdCustomer, String CustomerID, String Name, String Email, 
 			String Birthday, String Phone, String Address){
 		super();
 		this.IdCustomer = IdCustomer;
 		this.CustomerID = CustomerID;
 		this.Name = Name;
 		this.Email = Email;
-		this.Gender = Gender;
 		this.Birthday = Birthday;
 		this.Phone = Phone;
 		this.Address = Address;
 	}
 	
-	public Customer(int IdCustomer, String Name, String Email, String Password, String Birthday, 
+	public Customer(int IdCustomer, String Name, String Email, String Password, String gender, String Birthday, 
 			String Phone, String Address){
 		super();
 		this.IdCustomer = IdCustomer;
 		this.Name = Name;
 		this.Email = Email;
 		this.Password = Password;
+		this.Gender = gender;
 		this.Birthday = Birthday;
 		this.Phone = Phone;
 		this.Address = Address;
@@ -66,6 +66,7 @@ public class Customer {
 	}
 	
 	public Customer (String name, String email, String birthday, String phone, String address) {
+		super();	
 		this.Name = name;
 		this.Email = email;
 		this.Birthday = birthday;

@@ -9,6 +9,5 @@ public interface ReservationDao {
 	int update(Reservation reservation);
 	int delete(int id);
 	byte[] getImage(int id);
-	Reservation findById(int id);
 	List<Reservation> getAll();
 }

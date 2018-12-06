@@ -29,6 +29,13 @@ public class RoomType {
 		this.bed = bed;
 		this.id = id;
 	}
+	
+	public RoomType(int id, int roomQuantity) {
+		super();
+		this.id = id;
+		this.roomQuantity = roomQuantity;
+	}
+	
 	public String getRoomSize() {
 		return roomSize;
 	}

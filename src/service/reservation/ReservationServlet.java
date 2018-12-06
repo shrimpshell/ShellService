@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import common.ImageUtil;
 import service.employee.Employees;
+import service.roomtype.RoomType;
 
 @SuppressWarnings("serial")
 @WebServlet("/ReservationServlet")
@@ -62,9 +63,9 @@ public class ReservationServlet extends HttpServlet {
 			OutputStream os = response.getOutputStream();
 			count = reservationDao.insert(reservation);
 			writeText(response, String.valueOf(count));
-			}
 		}
-	
+	}
+
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);
