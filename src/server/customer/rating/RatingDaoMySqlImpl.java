@@ -195,7 +195,8 @@ public class RatingDaoMySqlImpl implements RatingDao{
 	@Override
 	public int delete(int IdRoomReservation) {
 		int count = 0;
-		String sql = "DELETE FROM Rating WHERE IdRoomReservation = ?;";
+		String sql = "UPDATE Rating "
+				+ "SET ratingStatus = 3 WHERE IdRoomReservation = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
@@ -222,8 +223,10 @@ public class RatingDaoMySqlImpl implements RatingDao{
 
 //	@Override
 	public List<Rating> getAllById(int IdCustomer) {
-		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation, C.ratingStatus From Customer as A, RoomReservation as B, Rating as C WHERE (A.IdCustomer = ?) And (A.IdCustomer = B.IdCustomer) "
-				+ "And (B.IdRoomReservation = C.IdRoomReservation) ORDER BY time DESC, IdRating DESC";
+		String sql = "Select C.ratingStar, C.time, C.opinion, C.review, C.IdRoomReservation, C.ratingStatus From Customer as A, RoomReservation as B, Rating as C "
+				+ "WHERE (A.IdCustomer = ?) And (A.IdCustomer = B.IdCustomer) "
+				+ "And (B.IdRoomReservation = C.IdRoomReservation)" 
+				+ "ORDER BY time DESC, IdRating DESC";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Rating> ratingList = new ArrayList<>();
@@ -267,7 +270,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 		String sql = "Select Rating.ratingStar, Rating.time, Rating.opinion, Rating.review, Rating.ratingStatus, "
 				+ "Rating.IdRoomReservation, Customer.Name From Rating join RoomReservation on "
 				+ "Rating.IdRoomReservation=RoomReservation.IdRoomReservation join Customer on "
-				+ "RoomReservation.IdCustomer=Customer.IdCustomer ORDER BY time DESC, IdRating DESC;";
+				+ "RoomReservation.IdCustomer=Customer.IdCustomer WHERE Rating.ratingStatus <> 3 ORDER BY time DESC, IdRating DESC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Rating> ratingList = new ArrayList<>();
@@ -312,7 +315,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 		String sql = "Select Rating.ratingStar, Rating.time, Rating.opinion, Rating.review, Rating.ratingStatus,"
 				+ "Rating.IdRoomReservation, Customer.Name From Rating join RoomReservation on "
 				+ "Rating.IdRoomReservation=RoomReservation.IdRoomReservation join Customer on "
-				+ "RoomReservation.IdCustomer=Customer.IdCustomer ORDER BY ratingStar DESC, IdRating DESC;";
+				+ "RoomReservation.IdCustomer=Customer.IdCustomer WHERE Rating.ratingStatus <> 3 ORDER BY ratingStar DESC, IdRating DESC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Rating> ratingList = new ArrayList<>();
@@ -356,7 +359,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 		String sql = "Select Rating.ratingStar, Rating.time, Rating.opinion, Rating.review, Rating.ratingStatus,"
 				+ "Rating.IdRoomReservation, Customer.Name From Rating join RoomReservation on "
 				+ "Rating.IdRoomReservation=RoomReservation.IdRoomReservation join Customer on "
-				+ "RoomReservation.IdCustomer=Customer.IdCustomer ORDER BY ratingStar ASC, IdRating DESC;";
+				+ "RoomReservation.IdCustomer=Customer.IdCustomer WHERE Rating.ratingStatus <> 3 ORDER BY ratingStar ASC, IdRating DESC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Rating> ratingList = new ArrayList<>();
@@ -400,7 +403,7 @@ public class RatingDaoMySqlImpl implements RatingDao{
 		String sql = "Select Rating.ratingStar, Rating.time, Rating.opinion, Rating.review, Rating.ratingStatus,"
 				+ "Rating.IdRoomReservation, Customer.Name From Rating join RoomReservation on "
 				+ "Rating.IdRoomReservation=RoomReservation.IdRoomReservation join Customer on "
-				+ "RoomReservation.IdCustomer=Customer.IdCustomer ORDER BY ratingStatus ASC, IdRating DESC;";
+				+ "RoomReservation.IdCustomer=Customer.IdCustomer WHERE Rating.ratingStatus <> 3 ORDER BY ratingStatus ASC, IdRating DESC;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Rating> ratingList = new ArrayList<>();
