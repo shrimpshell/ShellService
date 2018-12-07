@@ -251,21 +251,20 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 	public List<RoomType> findByRoomId(String checkInDate, String checkOutDate, int roomTypeId) {
 		String sql = "SELECT\n" + 
 				"rt.`IdRoomType`,\n" +  
-				"     COUNT(rrn.`IdRoomType`) quantity\n" + 
+				"     rt.roomQuantity - COUNT(rrn.`IdRoomType`) quantity" + 
 				"  FROM RoomReservation rrn\n" + 
 				"       LEFT JOIN RoomType rt ON rrn.`IdRoomType` = rt.`IdRoomType`\n" + 
-				"       WHERE (rrn.`CheckInDate` between ? and ?) or (rrn.`CheckOuntDate` between '2018-09-23' and '2018-09-25') AND\n" + 
-				"       rrn.IdRoomType = ?\n" + 
+				"       WHERE (rrn.`CheckInDate` between '" + checkInDate + "' and '" + checkOutDate +
+				"') or (rrn.`CheckOuntDate` between '" + checkInDate + "' and '" + checkOutDate + "') AND\n" + 
+				"       rrn.IdRoomType = " + roomTypeId + "\n" + 
 				"       GROUP BY rrn.`IdRoomType`";
+		System.out.println(sql);
 		Connection conn = null;
 		PreparedStatement ps = null;
 		List<RoomType> roomList = new ArrayList<RoomType>();
 		try {
 			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, roomTypeId);
-			ps.setString(2, checkInDate);
-			ps.setString(3, checkOutDate);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				int id = rs.getInt(1);
