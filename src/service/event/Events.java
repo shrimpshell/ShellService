@@ -21,6 +21,11 @@ public class Events {
 		this.end = end;
 		this.discount = discount;
 	}
+	public Events(int eventId, float discount) {
+		super();
+		this.eventId = eventId;
+		this.discount = discount;
+	}
 	public int getEventId() {
 		return eventId;
 	}

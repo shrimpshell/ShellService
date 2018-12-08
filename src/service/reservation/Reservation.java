@@ -23,6 +23,22 @@ public class Reservation {
 		this.price = price;
 	}
 
+	public Reservation(String reservationDate, String checkInDate, String checkOutDate, int extraBed, String reservationStatus, int quantity,
+			int customerId, int roomTypeId, int eventId, String roomGroup, int price) {
+		super();
+		this.reservationDate = reservationDate;
+		this.checkInDate = checkInDate;
+		this.checkOutDate = checkOutDate;
+		this.extraBed = extraBed;
+		this.quantity = quantity;
+		this.reservationStatus = reservationStatus;
+		this.customerId = customerId;
+		this.roomTypeId = roomTypeId;
+		this.eventId = eventId;
+		this.roomGroup = roomGroup;
+		this.price = price;
+	}
+
 
 
 	public String getReservationDate() {

@@ -56,7 +56,7 @@ public class ReservationServlet extends HttpServlet {
 
 		if (action.equals("insertReservation")) {
 			int count = 0;
-			String reservationsJson = jsonObject.get("reservations").getAsString();		
+			String reservationsJson = jsonObject.get("reservation").getAsString();		
 			Reservation reservation = gson.fromJson(reservationsJson, Reservation.class);						
 			count = reservationDao.insertReservation(reservation);		
 			writeText(response, (String.valueOf(count)));

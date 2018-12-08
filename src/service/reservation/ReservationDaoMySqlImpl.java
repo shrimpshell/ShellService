@@ -22,7 +22,7 @@ public class ReservationDaoMySqlImpl implements ReservationDao {
 
 	@Override
 	public int insertReservation(Reservation reservation) {
-		int IdInstantDetail = 0;
+		int count = 0;
 		Connection connection = null;
 		String sql = "insert into RoomReservation(ReservationDate, CheckInDate, CheckOuntDate, " + 
 		"ExtraBed, roomQuantity, RoomReservationStatus, IdCustomer, IdRoomType, IdEvents, RoomGroup, Price)\n" + 
@@ -48,7 +48,7 @@ public class ReservationDaoMySqlImpl implements ReservationDao {
 			// 回傳自動產生Id iOS 使用Alamofire會在reslut拿到
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
-				IdInstantDetail = rs.getInt(1);
+				count = rs.getInt(1);
 			}
 			// 寫入資料庫
 			connection.commit();
@@ -66,7 +66,7 @@ public class ReservationDaoMySqlImpl implements ReservationDao {
 				e.printStackTrace();
 				}
 			}
-		return IdInstantDetail;
+		return count;
 		}
 
 	@Override

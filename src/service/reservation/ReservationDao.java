@@ -5,7 +5,7 @@ import java.util.List;
 import service.event.Events;
 
 public interface ReservationDao {
-	public int insertReservation(Reservation reservation);
+	int insertReservation(Reservation reservation);
 	int update(Reservation reservation);
 	int delete(int id);
 	byte[] getImage(int id);
