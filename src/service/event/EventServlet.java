@@ -57,8 +57,8 @@ public class EventServlet extends HttpServlet {
 			writeText(response, gson.toJson(events));
 		} else if (action.equals("getDiscount")) {
 			String date = jsonObject.get("firstday").getAsString();
-			List<Events> events = eventDao.getDiscount(date);
-			writeText(response, gson.toJson(events));
+			Events event = eventDao.getDiscount(date);
+			writeText(response, gson.toJson(event));
 		} else if (action.equals("getImage")) {
 			OutputStream os = response.getOutputStream();
 			int id = jsonObject.get("imageId").getAsInt();
