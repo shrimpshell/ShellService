@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import common.ImageUtil;
 import service.employee.Employees;
+import service.instant.Instant;
 import service.roomtype.RoomType;
 
 @SuppressWarnings("serial")
@@ -53,16 +54,12 @@ public class ReservationServlet extends HttpServlet {
 
 		String action = jsonObject.get("action").getAsString();
 
-		if (action.equals("getAll")) {
-			List<Reservation> reservations = reservationDao.getAll();
-			writeText(response, gson.toJson(reservations));
-		} else if (action.equals("reservationInsert")) {
-			String reservationsJson = jsonObject.get("roomTypeId").getAsString();
-			Reservation reservation = gson.fromJson(reservationsJson, Reservation.class);
+		if (action.equals("insertReservation")) {
 			int count = 0;
-			OutputStream os = response.getOutputStream();
-			count = reservationDao.insert(reservation);
-			writeText(response, String.valueOf(count));
+			String reservationsJson = jsonObject.get("reservation").getAsString();		
+			Reservation reservation = gson.fromJson(reservationsJson, Reservation.class);						
+			count = reservationDao.insertReservation(reservation);		
+			writeText(response, (String.valueOf(count)));
 		}
 	}
 
