@@ -55,11 +55,12 @@ public class ReservationServlet extends HttpServlet {
 		String action = jsonObject.get("action").getAsString();
 
 		if (action.equals("insertReservation")) {
-			int count = 0;
 			String reservationsJson = jsonObject.get("reservation").getAsString();		
 			Reservation reservation = gson.fromJson(reservationsJson, Reservation.class);						
-			count = reservationDao.insertReservation(reservation);		
-			writeText(response, (String.valueOf(count)));
+			int reservationId = reservationDao.insertReservation(reservation);	
+			String roomNumber = reservationDao.findRoomNumber(reservation.checkInDate, reservation.checkOutDate, reservation.roomTypeId);
+			int roomStatusId = reservationDao.insertRoomStatus(roomNumber, reservationId);
+			writeText(response, (String.valueOf(reservationId)));
 		}
 	}
 
