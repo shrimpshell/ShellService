@@ -3,7 +3,7 @@ package service.reservation;
 
 public class Reservation {
 	public String reservationDate, checkInDate, checkOutDate, reservationStatus, roomGroup;
-	public int roomTypeId, quantity, extraBed, price, eventId, customerId;
+	public int roomReservationId, roomTypeId, quantity, extraBed, price, eventId, customerId;
 	
 	
 
@@ -39,7 +39,18 @@ public class Reservation {
 		this.price = price;
 	}
 
-
+	public Reservation(int roomReservationId, int quantity) {
+		super();
+		this.roomReservationId = roomReservationId;
+		this.quantity = quantity;
+	}
+	
+	
+	
+	public Reservation(int roomReservationId) {
+		super();
+		this.roomReservationId = roomReservationId;
+	}
 
 	public String getReservationDate() {
 		return reservationDate;
@@ -171,5 +182,12 @@ public class Reservation {
 		this.customerId = customerId;
 	}
 
+	public int getRoomReservationId() {
+		return roomReservationId;
+	}
+
+	public void setRoomReservationId(int roomReservationId) {
+		this.roomReservationId = roomReservationId;
+	}
 	
 }
