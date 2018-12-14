@@ -1,5 +1,5 @@
 package service.customer;
-
+import service.reservation.*;
 import java.util.List;
 
 public interface CustomerDao {
@@ -21,5 +21,7 @@ public interface CustomerDao {
 	List<Customer> getAll();
 
 	int updateImage(int IdCustomer, byte[] image);
+
+	Customer getRoomReservationStatus(int IdCustomer);
 
 }
