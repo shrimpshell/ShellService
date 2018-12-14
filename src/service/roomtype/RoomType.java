@@ -9,16 +9,30 @@ public class RoomType {
 	
 	public RoomType(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price) {
 		super();
-		this.price = price;
-		this.roomQuantity = roomQuantity;
-		this.adultQuantity = adultQuantity;
-		this.childQuantity = childQuantity;
+		this.id = id;
 		this.name = name;
 		this.roomSize = roomSize;
 		this.bed = bed;
-		this.id = id;
+		this.adultQuantity = adultQuantity;
+		this.childQuantity = childQuantity;
+		this.roomQuantity = roomQuantity;
+		this.price = price;
 	}
 	
+	public RoomType(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity,
+			int roomQuantity) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.roomSize = roomSize;
+		this.bed = bed;
+		this.adultQuantity = adultQuantity;
+		this.childQuantity = childQuantity;
+		this.roomQuantity = roomQuantity;
+	}
+
+
+
 	public RoomType(int id, int roomQuantity) {
 		super();
 		this.id = id;

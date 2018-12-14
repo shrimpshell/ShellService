@@ -73,7 +73,12 @@ public class RoomTypeServlet extends HttpServlet {
 		if (action.equals("getAll")) {
 			List<RoomType> rooms = roomTypeDao.getAll();
 			writeText(response, gson.toJson(rooms));
-		} else if (action.equals("getFive")) {
+		} else if (action.equals("getRoomType")) {
+			String checkInDate = jsonObject.get("checkInDate").getAsString();
+			String checkOutDate = jsonObject.get("checkOutDate").getAsString();
+			List<RoomType> rooms = roomTypeDao.getRoomType(checkInDate, checkOutDate);
+			writeText(response, gson.toJson(rooms));
+		}else if (action.equals("getFive")) {
 			List<RoomType> rooms = roomTypeDao.getFive();
 			writeText(response, gson.toJson(rooms));
 		} else if (action.equals("getReservation")) {
