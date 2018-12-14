@@ -79,6 +79,11 @@ public class CustomerServlet extends HttpServlet {
 			Customer customer = gson.fromJson(spotJson, Customer.class);
 			int count = customerDao.delete(customer.getIdCustomer());
 			writeText(response, String.valueOf(count));
+		//會員頁面顯示入住資訊
+		} else if(action.equals("getRoomReservationStatus")) {
+			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
+			Customer customer = customerDao.getRoomReservationStatus(Integer.valueOf(IdCustomer));
+			writeText(response, gson.toJson(customer));
 		//取得所有會員資訊
 		}else if(action.equals("getAllById")) {
 			List<Customer> customers = customerDao.getAll();
