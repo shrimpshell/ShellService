@@ -340,4 +340,44 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 		}
 		return image;
 	}
+	
+	@Override
+	public Customer getRoomReservationStatus(int IdCustomer) {
+		String sql = "select rr.CheckInDate, rr.RoomReservationStatus, rs.RoomNumber " + 
+				"from RoomReservation rr left join RoomStatus rs on rr.IdRoomReservation = rs.IdRoomReservation " + 
+				"where (rr.RoomReservationStatus = 1 or rr.RoomReservationStatus = 0) and rr.IdCustomer = ? limit 0, 1;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		Customer customer = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, IdCustomer);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				String CheckInDate = rs.getString(1); 
+				String RoomReservationStatus = rs.getString(2);
+				String RoomNumber = rs.getString(3);
+				
+				customer = new Customer(IdCustomer, CheckInDate, RoomNumber, RoomReservationStatus);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return customer;
+
+	}
+	
 }
