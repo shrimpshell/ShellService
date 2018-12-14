@@ -163,25 +163,27 @@ public class EventDaoMySqlImpl implements EventDao {
 	}
 
 	@Override
-	public List<Events> getDiscount(String date) {
+	public Events getDiscount(String date) {
 		String sql = "SELECT\n" + 
+				"et.IdEvents," +
 				"min(et.`discount`)\n" + 
 				" FROM Events et\n" + 
 				"WHERE\n" + 
 				"'" + date + "' between et.`Events_Start_Datetime` and et.`Events_End_Datetime`";
 		Connection connection = null;
 		PreparedStatement ps = null;
-		List<Events> eventList = new ArrayList<Events>();
+		Events event = null;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
+			System.out.println(sql);
 			while (rs.next()) {
-				float discount = rs.getFloat(1);
-				Events event = new Events(discount);
-				eventList.add(event);
+				int eventId = rs.getInt(1);
+				float discount = rs.getFloat(2);
+				event = new Events(eventId, discount);
 			}
-			return eventList;
+			return event;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -196,7 +198,7 @@ public class EventDaoMySqlImpl implements EventDao {
 				e.printStackTrace();
 			}
 		}
-		return eventList;
+		return event;
 	}
 
 	@Override

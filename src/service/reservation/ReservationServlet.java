@@ -2,10 +2,7 @@ package service.reservation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Base64;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import common.ImageUtil;
-import service.employee.Employees;
-import service.roomtype.RoomType;
 
 @SuppressWarnings("serial")
 @WebServlet("/ReservationServlet")
@@ -30,8 +24,6 @@ public class ReservationServlet extends HttpServlet {
 		if (reservationDao == null) {
 			reservationDao = new ReservationDaoMySqlImpl();
 		}
-		List<Reservation> reservations = reservationDao.getAll();
-		writeText(response, new Gson().toJson(reservations));
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -53,20 +45,19 @@ public class ReservationServlet extends HttpServlet {
 
 		String action = jsonObject.get("action").getAsString();
 
-		if (action.equals("getAll")) {
-			List<Reservation> reservations = reservationDao.getAll();
-			writeText(response, gson.toJson(reservations));
-		} else if (action.equals("reservationInsert")) {
-			String reservationsJson = jsonObject.get("roomTypeId").getAsString();
-			Reservation reservation = gson.fromJson(reservationsJson, Reservation.class);
-			int count = 0;
-			OutputStream os = response.getOutputStream();
-			count = reservationDao.insert(reservation);
-			writeText(response, String.valueOf(count));
+		if (action.equals("insertReservation")) {
+			String reservationsJson = jsonObject.get("reservation").getAsString();		
+			Reservation reservation = gson.fromJson(reservationsJson, Reservation.class);						
+			Reservation roomReservation = reservationDao.insertReservation(reservation);
+			for(int i = 1; i <= reservation.quantity; i++) {
+				String roomNumber = reservationDao.findRoomNumber(reservation.checkInDate, reservation.checkOutDate, reservation.roomTypeId);
+				int roomStatusId = reservationDao.insertRoomStatus(roomNumber, roomReservation.roomReservationId);
+			}
+			writeText(response, (String.valueOf(roomReservation.roomReservationId)));
 		}
 	}
-
-
+	
+	
 	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);
 		PrintWriter out = response.getWriter();
