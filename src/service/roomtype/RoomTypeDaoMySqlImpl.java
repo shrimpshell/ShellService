@@ -203,13 +203,15 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 
 	@Override
 	public List<RoomType> getReservation(String checkInDate, String checkOutDate) {
-		String sql = "SELECT\n" + "rt.`IdRoomType`,\n" + " rt.`RoomTypeName`,\n" + "  rt.`RoomSize`,\n"
-				+ "   rt.`Bed`,\n" + "    rt.`AdultQuantity`,\n" + "     rt.`ChildQuantity`,\n"
-				+ "      COUNT(rrn.`IdRoomType`) quantity\n" + "  FROM RoomReservation rrn\n"
-				+ "       LEFT JOIN RoomType rt ON rrn.`IdRoomType` = rt.`IdRoomType`\n"
-				+ "       WHERE (rrn.`CheckInDate` between '" + checkInDate + "' and '" + checkOutDate
-				+ "') or (rrn.`CheckOuntDate` between '" + checkInDate + "' and '" + checkOutDate + "') \n"
-				+ "       GROUP BY rrn.`IdRoomType`\n" + "ORDER BY `IdRoomType` ASC";
+		String sql = "select rt.IdRoomType, rt.RoomTypeName, rt.RoomSize, rt.Bed, rt.AdultQuantity, " +
+				"rt.ChildQuantity, (rt.roomQuantity - NVL(rr.Quantity,0)) Quantity, rt.Price\n" + 
+				"from RoomType rt left join (select rt.IdRoomType, SUM(rrn.RoomQuantity) Quantity\n" + 
+				"from RoomType rt\n" + 
+				"left join RoomReservation rrn on rt.IdRoomType = rrn.IdRoomType\n" + 
+				"where (rrn.CheckInDate between ? and ?) or " + 
+				"(rrn.CheckOuntDate between ? and ?)\n" + 
+				"group by IdRoomType) rr on rt.IdRoomType = rr.IdRoomType\n" + 
+				"having Quantity <> 0";
 		System.out.println(sql);
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -217,6 +219,10 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
+			ps.setString(1, checkInDate);
+			ps.setString(2, checkOutDate);
+			ps.setString(3, checkInDate);
+			ps.setString(4, checkOutDate);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int id = rs.getInt(1);
@@ -226,7 +232,8 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 				int adult = rs.getInt(5);
 				int child = rs.getInt(6);
 				int roomNum = rs.getInt(7);
-				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum);
+				int price = rs.getInt(8);
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price);
 				roomList.add(room);
 			}
 			return roomList;
