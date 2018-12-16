@@ -3,7 +3,7 @@ package service.roomtype;
 import java.sql.Blob;
 
 public class RoomType {
-	private int id, price, roomQuantity, adultQuantity, childQuantity;
+	private int id, price, roomQuantity, adultQuantity, childQuantity, reservationQuantity;
 	private String name, roomSize, bed;
 	private Blob image;
 	
@@ -17,6 +17,19 @@ public class RoomType {
 		this.childQuantity = childQuantity;
 		this.roomQuantity = roomQuantity;
 		this.price = price;
+	}
+	
+	public RoomType(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price, int reservationQuantity) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.roomSize = roomSize;
+		this.bed = bed;
+		this.adultQuantity = adultQuantity;
+		this.childQuantity = childQuantity;
+		this.roomQuantity = roomQuantity;
+		this.price = price;
+		this.reservationQuantity = reservationQuantity;
 	}
 	
 	public RoomType(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity,
@@ -93,6 +106,14 @@ public class RoomType {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public int getReservationQuantity() {
+		return reservationQuantity;
+	}
+
+	public void setReservationQuantity(int reservationQuantity) {
+		this.reservationQuantity = reservationQuantity;
+	}
+
 	public String getDetail() {
 		String str = "房間型號：" + this.getRoomSize() + "\n" +
 					"床型：" + this.getBed() + "\n" +
