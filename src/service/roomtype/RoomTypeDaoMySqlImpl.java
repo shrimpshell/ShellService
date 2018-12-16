@@ -233,7 +233,8 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 				int child = rs.getInt(6);
 				int roomNum = rs.getInt(7);
 				int price = rs.getInt(8);
-				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price);
+				int reservationQuantity = 0;
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price, reservationQuantity);
 				roomList.add(room);
 			}
 			return roomList;
