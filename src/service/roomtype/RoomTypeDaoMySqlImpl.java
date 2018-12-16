@@ -200,6 +200,59 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 		}
 		return roomList;
 	}
+	
+	@Override
+	public List<RoomType> getRoomType(String checkInDate, String checkOutDate) {
+		String sql = "select rt.IdRoomType, rt.RoomTypeName, rt.RoomSize, rt.Bed, rt.AdultQuantity, " +
+				"rt.ChildQuantity, (rt.roomQuantity - NVL(rr.Quantity,0)) Quantity, rt.Price\n" + 
+				"from RoomType rt left join (select rt.IdRoomType, SUM(rrn.RoomQuantity) Quantity\n" + 
+				"from RoomType rt\n" + 
+				"left join RoomReservation rrn on rt.IdRoomType = rrn.IdRoomType\n" + 
+				"where (rrn.CheckInDate between ? and ?) or " + 
+				"(rrn.CheckOuntDate between ? and ?)\n" + 
+				"group by IdRoomType) rr on rt.IdRoomType = rr.IdRoomType\n" + 
+				"having Quantity <> 0";
+		System.out.println(sql);
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<RoomType> roomList = new ArrayList<RoomType>();
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, checkInDate);
+			ps.setString(2, checkOutDate);
+			ps.setString(3, checkInDate);
+			ps.setString(4, checkOutDate);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String roomSize = rs.getString(3);
+				String bed = rs.getString(4);
+				int adult = rs.getInt(5);
+				int child = rs.getInt(6);
+				int roomNum = rs.getInt(7);
+				int price = rs.getInt(8);
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price);
+				roomList.add(room);
+			}
+			return roomList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return roomList;
+	}
 
 	@Override
 	public List<RoomType> getReservation(String checkInDate, String checkOutDate) {
