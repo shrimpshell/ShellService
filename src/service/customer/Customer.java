@@ -1,15 +1,14 @@
 package service.customer;
 
-import com.mysql.cj.jdbc.Blob;
+import org.mariadb.jdbc.*;
 
 public class Customer {
-	private String CustomerID, Name, Email, Password, Gender, Phone, Address, Birthday;
+	private String CustomerID, Name, Email, Password, Gender, Phone, Address, Birthday
+	, CheckInDate, RoomNumber, RoomReservationStatus;
 	private int discount;
 	private int IdCustomer;
-	private Blob CustomerPic;
+	private MariaDbBlob CustomerPic;
 
-
-	
 	public Customer(int IdCustomer, String customerID, String name, String email, 
 			String password, String gender, String birthday, String phone, String address) {
 		super();
@@ -24,33 +23,33 @@ public class Customer {
 		
 	}
 	
-	public Customer(int IdCustomer, String CustomerID, String Name, String Email, String Gender, 
+	public Customer(int IdCustomer, String CustomerID, String Name, String Email, 
 			String Birthday, String Phone, String Address){
 		super();
 		this.IdCustomer = IdCustomer;
 		this.CustomerID = CustomerID;
 		this.Name = Name;
 		this.Email = Email;
-		this.Gender = Gender;
 		this.Birthday = Birthday;
 		this.Phone = Phone;
 		this.Address = Address;
 	}
 	
-	public Customer(int IdCustomer, String Name, String Email, String Password, String Birthday, 
+	public Customer(int IdCustomer, String Name, String Email, String Password, String gender, String Birthday, 
 			String Phone, String Address){
 		super();
 		this.IdCustomer = IdCustomer;
 		this.Name = Name;
 		this.Email = Email;
 		this.Password = Password;
+		this.Gender = gender;
 		this.Birthday = Birthday;
 		this.Phone = Phone;
 		this.Address = Address;
 	}
 	
 	public Customer (int IdCustomer, String customerID, String name, String email, 
-			String password, String gender, String birthday, String phone, String address, int discount, Blob customerPic){
+			String password, String gender, String birthday, String phone, String address, int discount, MariaDbBlob customerPic){
 		super();
 		this.IdCustomer = IdCustomer;
 		this.CustomerID = customerID;
@@ -66,6 +65,7 @@ public class Customer {
 	}
 	
 	public Customer (String name, String email, String birthday, String phone, String address) {
+		super();	
 		this.Name = name;
 		this.Email = email;
 		this.Birthday = birthday;
@@ -73,6 +73,14 @@ public class Customer {
 		this.Address = address;
 	}
 	
+	public Customer(int idCustomer, String checkInDate, String roomNumber, String roomReservationStatus) {
+		super();
+		this.IdCustomer = idCustomer;
+		this.CheckInDate = checkInDate;
+		this.RoomNumber = roomNumber;
+		this.RoomReservationStatus = roomReservationStatus;
+	}
+
 	public String getCustomerID() {
 		return CustomerID;
 	}
@@ -121,10 +129,10 @@ public class Customer {
 	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
-	public Blob getCustomerPic() {
+	public MariaDbBlob getCustomerPic() {
 		return CustomerPic;
 	}
-	public void setCustomerPic(Blob customerPic) {
+	public void setCustomerPic(MariaDbBlob customerPic) {
 		CustomerPic = customerPic;
 	}
 	public int getIdCustomer() {
@@ -138,6 +146,30 @@ public class Customer {
 	}
 	public void setBirthday(String birthday) {
 		Birthday = birthday;
+	}
+	
+	public String getCheckInDate() {
+		return CheckInDate;
+	}
+
+	public void setCheckInDate(String checkInDate) {
+		CheckInDate = checkInDate;
+	}
+
+	public String getRoomNumber() {
+		return RoomNumber;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		RoomNumber = roomNumber;
+	}
+
+	public String getRoomReservationStatus() {
+		return RoomReservationStatus;
+	}
+
+	public void setRoomReservationStatus(String roomReservationStatus) {
+		RoomReservationStatus = roomReservationStatus;
 	}
 	
 	

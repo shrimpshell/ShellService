@@ -58,15 +58,19 @@ public class EmployeeServlet extends HttpServlet {
 		} else if (action.equals("getAll")) {
 			List<Employees> events = employeeDao.getAll();
 			writeText(response, gson.toJson(events));
-		} else if (action.equals("getImage")) {
+		} else if (action.equals("getImage")) { 
 			OutputStream os = response.getOutputStream();
-			int id = jsonObject.get("imageId").getAsInt();
+			int id = jsonObject.get("IdEmployee").getAsInt();
 			byte[] image = employeeDao.getImage(id);
 			if (image != null) {
 				response.setContentType("image/jpeg");
 				response.setContentLength(image.length);
 			}
-			os.write(image);
+			try {
+				os.write(image);
+			} catch (NullPointerException e) {
+				writeText(response, "image is null");
+			}
 		} else if (action.equals("employeeInsert") || action.equals("employeeUpdate")) {
 			String employeeJson = jsonObject.get("employee").getAsString();
 			Employees employee = gson.fromJson(employeeJson, Employees.class);
@@ -95,13 +99,39 @@ public class EmployeeServlet extends HttpServlet {
 			System.out.println(employee.getId());
 			int count = employeeDao.delete(employee.getId());
 			writeText(response, String.valueOf(count));
+		} else if (action.equals("findById")) {
+			int idEmployee = jsonObject.get("idEmployee").getAsInt();
+			Employees employee = employeeDao.findById(idEmployee);
+			writeText(response, gson.toJson(employee));
+		} else if (action.equals("updateImage")) {
+			int idEmployee = jsonObject.get("idEmployee").getAsInt();
+			
+			String imageBase64 = jsonObject.get("imageBase64").getAsString();
+			byte[] image = null;
+			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
+			
+			int count = 0;
+			count = employeeDao.updateImage(idEmployee, image);
+			writeText(response, String.valueOf(count));
+		} else if (action.equals("updateWithoutImage")) {
+			int count = 0;
+			String employeeJson = jsonObject.get("employee").getAsString();
+			Employees employee = gson.fromJson(employeeJson, Employees.class);
+			
+			count = employeeDao.updateWithoutImage(employee);
+			writeText(response, String.valueOf(count));
 		}
 	}
 
 	private void writeText(HttpServletResponse response, String outText) throws IOException {
 		response.setContentType(CONTENT_TYPE);
-		PrintWriter out = response.getWriter();
-		out.print(outText);
-		System.out.println("output: " + outText);
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(outText);
+			System.out.println("output: " + outText);
+		} catch(IllegalStateException e) {
+			System.out.println("output: null");
+		}
+		
 	}
 }

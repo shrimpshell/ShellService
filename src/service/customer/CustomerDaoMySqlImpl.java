@@ -20,7 +20,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	public CustomerDaoMySqlImpl() {
 		super();
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("org.mariadb.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +62,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 
 	@Override
 	public boolean userExist(String email) {
-		String sql = "SELECT Email FROM Customer WHERE Email = ?;";
+		String sql = "SELECT Email FROM Customer WHERE Email = ? AND isDeleted = 0;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		boolean isCustomerIdExist = false;
@@ -196,7 +196,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 
 	@Override
 	public Customer findById(int IdCustomer) {
-		String sql = "SELECT Name, Email, Password, Birthday, Phone, Address "
+		String sql = "SELECT Name, Email, Password, Gender, Birthday, Phone, Address "
 				+ "FROM Customer WHERE IdCustomer = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -211,10 +211,11 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 				String Name = rs.getString(1); 
 				String Email = rs.getString(2);
 				String Password = rs.getString(3);
-				String Birthday = ChangeDate.getDateToStr(rs.getDate(4));
-				String Phone = rs.getString(5);
-				String Address = rs.getString(6);
-				customer = new Customer(IdCustomer, Name, Email, Password, Birthday, Phone, Address);
+				String Gender = rs.getString(4);
+				String Birthday = ChangeDate.getDateToStr(rs.getDate(5));
+				String Phone = rs.getString(6);
+				String Address = rs.getString(7);
+				customer = new Customer(IdCustomer, Name, Email, Password, Gender, Birthday, Phone, Address);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -236,7 +237,7 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 
 	@Override
 	public List<Customer> getAll() {
-		String sql = "SELECT * FROM Customer WHERE isDeleted = 0;";
+		String sql = "SELECT * FROM Customer WHERE isDeleted = 0";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		List<Customer> customerList = new ArrayList<Customer>();
@@ -277,8 +278,106 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	}
 
 	@Override
-	public int updateImage(Customer customer) {
-		return 0;
+	public int updateImage (int IdCustomer, byte[] image) {
+		int count = 0;
+		String sql = "UPDATE Customer "
+				+ "SET CustomerPic = ? "
+				+ "WHERE IdCustomer = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setBytes(1, image != null ? image : null);
+			ps.setInt(2, IdCustomer);
+			count = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return count;
 	}
+	
+	@Override
+	public byte[] getImage(int IdCustomer) {
+		String sql = "SELECT CustomerPic FROM Customer WHERE IdCustomer = ?;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		byte[] image = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, IdCustomer);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				image = rs.getBytes(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return image;
+	}
+	
+	@Override
+	public Customer getRoomReservationStatus(int IdCustomer) {
+		String sql = "select rr.CheckInDate, rr.RoomReservationStatus, rs.RoomNumber " + 
+				"from RoomReservation rr left join RoomStatus rs on rr.IdRoomReservation = rs.IdRoomReservation " + 
+				"where (rr.RoomReservationStatus = 1 or rr.RoomReservationStatus = 0) and rr.IdCustomer = ? limit 0, 1;";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		Customer customer = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+					Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, IdCustomer);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				String CheckInDate = rs.getString(1); 
+				String RoomReservationStatus = rs.getString(2);
+				String RoomNumber = rs.getString(3);
+				
+				customer = new Customer(IdCustomer, CheckInDate, RoomNumber, RoomReservationStatus);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return customer;
 
+	}
+	
 }

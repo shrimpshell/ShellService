@@ -7,6 +7,11 @@ public class Events {
 	private float discount;
 	private String name, description, start, end;
 	private Blob image;
+	
+	public Events(float discount) {
+		super();
+		this.discount = discount;
+	}
 	public Events(int eventId, String name, String description, String start, String end, float discount) {
 		super();
 		this.eventId = eventId;
@@ -14,6 +19,11 @@ public class Events {
 		this.description = description;
 		this.start = start;
 		this.end = end;
+		this.discount = discount;
+	}
+	public Events(int eventId, float discount) {
+		super();
+		this.eventId = eventId;
 		this.discount = discount;
 	}
 	public int getEventId() {

@@ -8,6 +8,7 @@ public interface EventDao {
 	int delete(int id);
 	byte[] getImage(int id);
 	Events findById(int id);
+	Events getDiscount(String date);
 	List<Events> getAll();
 	List<Events> getFive();
 }

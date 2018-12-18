@@ -1,25 +1,25 @@
-package service.room;
+package service.roomtype;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import common.Common;
-import service.event.Events;
+import service.reservation.Reservation;
 
-public class RoomDaoMySqlImpl implements RoomDao {
+public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 
-	public RoomDaoMySqlImpl() {
+	public RoomTypeDaoMySqlImpl() {
 		super();
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("org.mariadb.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public int insert(Room room, byte[] image) {
+	public int insert(RoomType room, byte[] image) {
 		int count = 0;
 		String sql = "INSERT INTO RoomType " + 
 				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price, RoomPic) " +
@@ -56,7 +56,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	}
 
 	@Override
-	public int update(Room room, byte[] image) {
+	public int update(RoomType room, byte[] image) {
 		int count = 0;
 		String sql = "UPDATE RoomType SET RoomTypeName = ?, RoomSize = ?, Bed = ?, AdultQuantity = ?, ChildQuantity = ?, RoomQuantity = ?, Price = ?, RoomPic = ? WHERE IdRoomType = ?;";
 		Connection connection = null;
@@ -122,14 +122,14 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	}
 
 	@Override
-	public Room findById(int id) {
+	public RoomType findById(int id) {
 		String sql = "SELECT RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price FROM RoomType WHERE IdRoomType = ?;";
+
 		Connection conn = null;
 		PreparedStatement ps = null;
-		Room room = null;
+		RoomType room = null;
 		try {
-			conn = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -141,7 +141,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 				int child = rs.getInt(5);
 				int roomNum = rs.getInt(6);
 				int price = rs.getInt(7);
-				room = new Room(0, name, roomSize, bed, adult, child, roomNum, price);
+				room = new RoomType(0, name, roomSize, bed, adult, child, roomNum, price);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -161,11 +161,11 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	}
 
 	@Override
-	public List<Room> getAll() {
-		String sql = "SELECT * FROM RoomType";
+	public List<RoomType> getAll() {
+		String sql = "SELECT * FROM RoomType ORDER BY `IdRoomType` ASC";
 		Connection connection = null;
 		PreparedStatement ps = null;
-		List<Room> roomList = new ArrayList<Room>();
+		List<RoomType> roomList = new ArrayList<RoomType>();
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
@@ -180,7 +180,61 @@ public class RoomDaoMySqlImpl implements RoomDao {
 				int child = rs.getInt(6);
 				int roomNum = rs.getInt(7);
 				int price = rs.getInt(8);
-				Room room = new Room(id, name, roomSize, bed, adult, child, roomNum, price);
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price);
+				roomList.add(room);
+			}
+			return roomList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return roomList;
+	}
+	
+	@Override
+	public List<RoomType> getRoomType(String checkInDate, String checkOutDate) {
+		String sql = "select rt.IdRoomType, rt.RoomTypeName, rt.RoomSize, rt.Bed, rt.AdultQuantity, " +
+				"rt.ChildQuantity, (rt.roomQuantity - NVL(rr.Quantity,0)) Quantity, rt.Price\n" + 
+				"from RoomType rt left join (select rt.IdRoomType, SUM(rrn.RoomQuantity) Quantity\n" + 
+				"from RoomType rt\n" + 
+				"left join RoomReservation rrn on rt.IdRoomType = rrn.IdRoomType\n" + 
+				"where (rrn.CheckInDate between ? and ?) or " + 
+				"(rrn.CheckOuntDate between ? and ?)\n" + 
+				"group by IdRoomType) rr on rt.IdRoomType = rr.IdRoomType\n" + 
+				"having Quantity <> 0";
+		System.out.println(sql);
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<RoomType> roomList = new ArrayList<RoomType>();
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, checkInDate);
+			ps.setString(2, checkOutDate);
+			ps.setString(3, checkInDate);
+			ps.setString(4, checkOutDate);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String roomSize = rs.getString(3);
+				String bed = rs.getString(4);
+				int adult = rs.getInt(5);
+				int child = rs.getInt(6);
+				int roomNum = rs.getInt(7);
+				int price = rs.getInt(8);
+				int reservationQuantity = 0;
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price, reservationQuantity);
 				roomList.add(room);
 			}
 			return roomList;
@@ -202,14 +256,101 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	}
 
 	@Override
+	public List<RoomType> getReservation(String checkInDate, String checkOutDate) {
+		String sql = "SELECT\n" + "rt.`IdRoomType`,\n" + " rt.`RoomTypeName`,\n" + "  rt.`RoomSize`,\n"
+				+ "   rt.`Bed`,\n" + "    rt.`AdultQuantity`,\n" + "     rt.`ChildQuantity`,\n"
+				+ "      COUNT(rrn.`IdRoomType`) quantity\n" + "  FROM RoomReservation rrn\n"
+				+ "       LEFT JOIN RoomType rt ON rrn.`IdRoomType` = rt.`IdRoomType`\n"
+				+ "       WHERE (rrn.`CheckInDate` between '" + checkInDate + "' and '" + checkOutDate
+				+ "') or (rrn.`CheckOuntDate` between '" + checkInDate + "' and '" + checkOutDate + "') \n"
+				+ "       GROUP BY rrn.`IdRoomType`\n" + "ORDER BY `IdRoomType` ASC";
+		System.out.println(sql);
+		Connection connection = null;
+		PreparedStatement ps = null;
+		List<RoomType> roomList = new ArrayList<RoomType>();
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String name = rs.getString(2);
+				String roomSize = rs.getString(3);
+				String bed = rs.getString(4);
+				int adult = rs.getInt(5);
+				int child = rs.getInt(6);
+				int roomNum = rs.getInt(7);
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum);
+				roomList.add(room);
+			}
+			return roomList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return roomList;
+	}
+	
+	@Override
+	public List<RoomType> findByRoomId(String checkInDate, String checkOutDate, int roomTypeId) {
+		String sql = "SELECT\n" + 
+				"rt.`IdRoomType`,\n" +  
+				"     rt.roomQuantity - COUNT(rrn.`IdRoomType`) quantity" + 
+				"  FROM RoomReservation rrn\n" + 
+				"       LEFT JOIN RoomType rt ON rrn.`IdRoomType` = rt.`IdRoomType`\n" + 
+				"       WHERE (rrn.`CheckInDate` between '" + checkInDate + "' and '" + checkOutDate +
+				"') or (rrn.`CheckOuntDate` between '" + checkInDate + "' and '" + checkOutDate + "') AND\n" + 
+				"       rrn.IdRoomType = " + roomTypeId + "\n" + 
+				"       GROUP BY rrn.`IdRoomType`";
+		System.out.println(sql);
+		Connection conn = null;
+		PreparedStatement ps = null;
+		List<RoomType> roomList = new ArrayList<RoomType>();
+		try {
+			conn = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int id = rs.getInt(1);
+				int quantity = rs.getInt(2);
+				RoomType room = new RoomType(id, quantity);
+				roomList.add(room);
+			}
+		} catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return roomList;
+	}
+
+	@Override
 	public byte[] getImage(int id) {
 		String sql = "SELECT RoomPic FROM RoomType WHERE IdRoomType = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
 		byte[] image = null;
 		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -234,11 +375,11 @@ public class RoomDaoMySqlImpl implements RoomDao {
 	}
 
 	@Override
-	public List<Room> getFive() {
+	public List<RoomType> getFive() {
 		String sql = "SELECT * FROM RoomType ORDER BY IdRoomType DESC LIMIT 5";
 		Connection connection = null;
 		PreparedStatement ps = null;
-		List<Room> roomList = new ArrayList<Room>();
+		List<RoomType> roomList = new ArrayList<RoomType>();
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
@@ -253,7 +394,7 @@ public class RoomDaoMySqlImpl implements RoomDao {
 				int child = rs.getInt(6);
 				int roomNum = rs.getInt(7);
 				int price = rs.getInt(8);
-				Room room = new Room(id, name, roomSize, bed, adult, child, roomNum, price);
+				RoomType room = new RoomType(id, name, roomSize, bed, adult, child, roomNum, price);
 				roomList.add(room);
 			}
 			return roomList;

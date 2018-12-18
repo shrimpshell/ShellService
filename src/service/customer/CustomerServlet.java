@@ -2,6 +2,7 @@ package service.customer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Base64;
 import java.util.List;
@@ -60,8 +61,13 @@ public class CustomerServlet extends HttpServlet {
 			writeText(response, String.valueOf(customerDao.update(customer)));
 		//會員圖片更新
 		}else if(action.equals("updateImage")) {
+			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
 			String imageBase64 = jsonObject.get("imageBase64").getAsString();
-			byte[] image = Base64.getMimeDecoder().decode(imageBase64);
+			byte[] image = null;
+			if (imageBase64.length() > 0) image = Base64.getMimeDecoder().decode(imageBase64);
+			int count = 0;
+			count = customerDao.updateImage(Integer.valueOf(IdCustomer), image);
+			writeText(response, String.valueOf(count));
 		//用id尋找會員資料
 		}else if(action.equals("findById")) {
 			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
@@ -73,10 +79,28 @@ public class CustomerServlet extends HttpServlet {
 			Customer customer = gson.fromJson(spotJson, Customer.class);
 			int count = customerDao.delete(customer.getIdCustomer());
 			writeText(response, String.valueOf(count));
+		//會員頁面顯示入住資訊
+		} else if(action.equals("getRoomReservationStatus")) {
+			String IdCustomer = jsonObject.get("IdCustomer").getAsString();
+			Customer customer = customerDao.getRoomReservationStatus(Integer.valueOf(IdCustomer));
+			writeText(response, gson.toJson(customer));
 		//取得所有會員資訊
-		}else if(action.equals("getAll")) {
+		}else if(action.equals("getAllById")) {
 			List<Customer> customers = customerDao.getAll();
 			writeText(response, gson.toJson(customers));
+		}else if (action.equals("getImage")) {
+			OutputStream os = response.getOutputStream();
+			int IdCustomer = jsonObject.get("IdCustomer").getAsInt();
+			byte[] image = customerDao.getImage(IdCustomer);
+			if (image != null) {
+				response.setContentType("image/jpeg");
+				response.setContentLength(image.length);
+			}
+			try {
+				os.write(image);
+			} catch (Exception e) {
+				//writeText(response, "image is nulls111");
+			} 
 		}
 		
 	}

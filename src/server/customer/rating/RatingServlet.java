@@ -61,14 +61,28 @@ public class RatingServlet extends HttpServlet {
 			Rating rating = ratingDao.findById(Integer.valueOf(IdRoomReservation));
 			writeText(response, gson.toJson(rating));
 		}else if(action.equals("delete")) {
-			String ratingJson = jsonObject.get("rating").getAsString();
-			Rating rating = gson.fromJson(ratingJson, Rating.class);
-			int count = ratingDao.delete(rating.getIdRating());
+			int ratingJson = jsonObject.get("IdRoomReservation").getAsInt();
+			int count = ratingDao.delete(ratingJson);
 			writeText(response, String.valueOf(count));
-		}else if(action.equals("getAll")) {
+		}else if(action.equals("getAllById")) {
 			int IdCustomer = jsonObject.get("IdCustomer").getAsInt();
-			List<Rating> ratings = ratingDao.getAll(IdCustomer);
+			List<Rating> ratings = ratingDao.getAllById(IdCustomer);
 			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getAll")) {
+			List<Rating> ratings = ratingDao.getAll();
+			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getAllByHighRatingStar")) {
+			List<Rating> ratings = ratingDao.getAllByHighRatingStar();
+			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getAllByLowRatingStar")) {
+			List<Rating> ratings = ratingDao.getAllByLowRatingStar();
+			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getAllByRatingStatus")) {
+			List<Rating> ratings = ratingDao.getAllByRatingStatus();
+			writeText(response, gson.toJson(ratings));
+		}else if(action.equals("getRatingStatus")) {
+			int idRoomReservation = jsonObject.get("IdRoomReservation").getAsInt();
+			writeText(response, String.valueOf(ratingDao.getRatingStatus(idRoomReservation)));
 		}
 	}
 			
