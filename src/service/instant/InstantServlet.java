@@ -68,7 +68,8 @@ public class InstantServlet extends HttpServlet {
 			writeText(response, gson.toJson(instants));
 		} else if (action.equals("getCustomerStatus")) {
 			String roomNumber = jsonObject.get("roomNumber").getAsString();
-			List<Instant> instants = instantDao.getCustomerStatus(roomNumber);
+			int idCustomer = jsonObject.get("idCustomer").getAsInt();
+			List<Instant> instants = instantDao.getCustomerStatus(idCustomer, roomNumber);
 			writeText(response, gson.toJson(instants));
 		}
 		
