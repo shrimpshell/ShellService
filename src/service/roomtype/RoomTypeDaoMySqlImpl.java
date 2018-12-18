@@ -19,16 +19,19 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 	}
 
 	@Override
-	public int insert(RoomType room, byte[] image) {
+	public RoomType insert(RoomType room, byte[] image) {
 		int count = 0;
-		String sql = "INSERT INTO RoomType " + 
-				"(IdRoomType, RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, RoomQuantity, Price, RoomPic) " +
-				"VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?)";
+		RoomType roomType = null;
+		String sql = "insert into RoomType(RoomTypeName, RoomSize, Bed, AdultQuantity, ChildQuantity, " + 
+				"RoomQuantity, Price, RoomPic) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		Connection connection = null;
 		PreparedStatement ps = null;
+		System.out.println(sql);
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
-			ps = connection.prepareStatement(sql);
+			// 寫入資料庫關閉，避免插入的時候報錯修，改的內容也不會提交到資料庫
+			connection.setAutoCommit(false);
+			ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, room.getName());
 			ps.setString(2, room.getRoomSize());
 			ps.setString(3, room.getBed());
@@ -37,6 +40,45 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 			ps.setInt(6, room.getRoomQuantity());
 			ps.setInt(7, room.getPrice());
 			ps.setBytes(8, image != null ? image : null);
+			count = ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				int roomTypeId = rs.getInt(1);
+				String roomNumber = room.getRoomNumber();
+				roomType = new RoomType(roomTypeId, roomNumber);
+			}
+			// 寫入資料庫
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return roomType;
+	}
+	
+	@Override
+	public int insertRoomNumber(int roomTypeId, String roomNumber) {
+		int count = 0;
+		String sql = "INSERT INTO Room " + 
+				"(RoomNumber, IdRoomType) " +
+				"VALUES (?, ?)";
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try {
+			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, roomNumber);
+			ps.setInt(2, roomTypeId);
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
