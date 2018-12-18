@@ -145,9 +145,9 @@ public class InstantDaoMySqlImpl implements InstantDao{
 				"    LEFT JOIN RoomStatus AS rStatus\n" + 
 				"    ON rReserv.IdRoomReservation = rStatus.IdRoomReservation \n" + 
 				"    LEFT JOIN InstantDetail inDetail on rStatus.RoomNumber = inDetail.RoomNumber\n" + 
-				"WHERE rReserv.IdCustomer = ? and rReserv.RoomReservationStatus = 1 and rReserv.RoomGroup = (select rr.RoomGroup\n" + 
+				"WHERE rReserv.IdCustomer = ? and rReserv.RoomReservationStatus = 1 and inDetail.Status <>1 and rReserv.RoomGroup = (select rr.RoomGroup\n" + 
 				"from RoomReservation rr left join RoomStatus rs on rr.IdRoomReservation = rs.IdRoomReservation\n" + 
-				"where rr.IdCustomer = ? and rs.RoomNumber = ? and rr.RoomReservationStatus = 1)\n" + 
+				"where rr.IdCustomer = ? and rs.RoomNumber = ? and rr.RoomReservationStatus = 1 )\n" + 
 				"ORDER BY rReserv.CheckInDate DESC";
 		List<Instant> instantList = new ArrayList<Instant>();
 		Connection connection = null;
