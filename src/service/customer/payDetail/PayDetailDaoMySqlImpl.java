@@ -339,7 +339,7 @@ public class PayDetailDaoMySqlImpl implements PayDetailDao {
 				"ON rReserv.IdRoomReservation = rStatus.IdRoomReservation " + 
 				"LEFT JOIN Rating AS rating " +
 				"ON rReserv.IdRoomReservation = rating.IdRoomReservation " +
-				"WHERE rReserv.RoomReservationStatus != 3 " + 
+//				"WHERE rReserv.RoomReservationStatus != 3 " + 
 				"ORDER BY rReserv.CheckInDate DESC;";
 		Connection conn = null;
 		PreparedStatement ps = null;
