@@ -102,7 +102,8 @@ public class RoomTypeServlet extends HttpServlet {
 			
 			int count = 0;
 			if (action.equals("roomInsert")) {
-				count = roomTypeDao.insert(room, image);
+				RoomType rooms = roomTypeDao.insert(room, image);
+				count = roomTypeDao.insertRoomNumber(rooms.getId(), rooms.getRoomNumber());
 				writeText(response, String.valueOf(count));
 			} else if (action.equals("roomUpdate")) {
 				count = roomTypeDao.update(room, image);
