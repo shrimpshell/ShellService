@@ -4,7 +4,7 @@ import java.sql.Blob;
 
 public class RoomType {
 	private int id, price, roomQuantity, adultQuantity, childQuantity, reservationQuantity;
-	private String name, roomSize, bed;
+	private String name, roomSize, bed, roomNumber;
 	private Blob image;
 	
 	public RoomType(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price) {
@@ -17,6 +17,19 @@ public class RoomType {
 		this.childQuantity = childQuantity;
 		this.roomQuantity = roomQuantity;
 		this.price = price;
+	}
+	
+	public RoomType(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price, String roomNumber) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.roomSize = roomSize;
+		this.bed = bed;
+		this.adultQuantity = adultQuantity;
+		this.childQuantity = childQuantity;
+		this.roomQuantity = roomQuantity;
+		this.price = price;
+		this.roomNumber = roomNumber;
 	}
 	
 	public RoomType(int id, String name, String roomSize, String bed, int adultQuantity, int childQuantity, int roomQuantity, int price, int reservationQuantity) {
@@ -44,14 +57,18 @@ public class RoomType {
 		this.roomQuantity = roomQuantity;
 	}
 
-
-
 	public RoomType(int id, int roomQuantity) {
 		super();
 		this.id = id;
 		this.roomQuantity = roomQuantity;
 	}
 	
+	public RoomType(int id, String roomNumber) {
+		super();
+		this.id = id;
+		this.roomNumber = roomNumber;
+	}
+
 	public String getRoomSize() {
 		return roomSize;
 	}
@@ -112,6 +129,14 @@ public class RoomType {
 
 	public void setReservationQuantity(int reservationQuantity) {
 		this.reservationQuantity = reservationQuantity;
+	}
+
+	public String getRoomNumber() {
+		return roomNumber;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		this.roomNumber = roomNumber;
 	}
 
 	public String getDetail() {

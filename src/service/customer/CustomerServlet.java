@@ -96,7 +96,11 @@ public class CustomerServlet extends HttpServlet {
 				response.setContentType("image/jpeg");
 				response.setContentLength(image.length);
 			}
-			os.write(image);
+			try {
+				os.write(image);
+			} catch (Exception e) {
+				//writeText(response, "image is nulls111");
+			} 
 		}
 		
 	}

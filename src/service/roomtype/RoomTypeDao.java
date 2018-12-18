@@ -5,7 +5,8 @@ import java.util.List;
 import service.reservation.Reservation;
 
 public interface RoomTypeDao {
-	int insert(RoomType room, byte[] image);
+	RoomType insert(RoomType room, byte[] image);
+	int insertRoomNumber(int roomTypeId, String roomNumber);
 	int update(RoomType room, byte[] image);
 	int delete(int id);
 	byte[] getImage(int id);
