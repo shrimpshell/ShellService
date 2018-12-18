@@ -135,33 +135,42 @@ public class RoomTypeDaoMySqlImpl implements RoomTypeDao {
 	}
 
 	@Override
-	public int delete(int id) {
-		int count = 0;
-		String sql = "DELETE FROM RoomType WHERE IdRoomType = ?";
-		Connection connection = null;
-		PreparedStatement ps = null;
-		try {
-			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
-					Common.PASSWORD);
-			ps = connection.prepareStatement(sql);
-			ps.setInt(1, id);
-			count = ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return count;
-	}
+	 public int delete(int id) {
+	  int count = 0;
+	  int count2 = 0;
+	  String sql = "DELETE FROM RoomType WHERE IdRoomType = ?";
+	  String sql2 = "DELETE FROM Room WHERE IdRoomType = ?";
+	  Connection connection = null;
+	  PreparedStatement ps = null;
+	  PreparedStatement ps2 = null;
+	  try {
+	   connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
+	     Common.PASSWORD);
+	   ps2 = connection.prepareStatement(sql2);
+	   ps2.setInt(1, id);
+	   count2 = ps2.executeUpdate();
+	   
+	   ps = connection.prepareStatement(sql);
+	   ps.setInt(1, id);
+	   count = ps.executeUpdate(); 
+	   count += count2 - 1;
+	   
+	  } catch (SQLException e) {
+	   e.printStackTrace();
+	  } finally {
+	   try {
+	    if (ps != null) {
+	     ps.close();
+	    }
+	    if (connection != null) {
+	     connection.close();
+	    }
+	   } catch (SQLException e) {
+	    e.printStackTrace();
+	   }
+	  }
+	  return count;
+	 }
 
 	@Override
 	public RoomType findById(int id) {
