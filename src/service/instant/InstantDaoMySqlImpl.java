@@ -137,17 +137,27 @@ public class InstantDaoMySqlImpl implements InstantDao{
 	}
 
 	@Override
-	public List<Instant> getCustomerStatus(String roomNumber) {
-		String sql = "SELECT IdInstantDetail, IdInstantService, RoomNumber, Status, Quantity, IdInstantType, IdRoomStatus "
-				+ "FROM db_cp102b.InstantDetail "
-				+ "WHERE Status <>1 AND RoomNumber = ? ORDER BY IdInstantDetail DESC;";
+	public List<Instant> getCustomerStatus(int idCustomer, String roomNumber) {
+		String sql = "SELECT  inDetail.IdInstantDetail, inDetail.IdInstantService, inDetail.RoomNumber, inDetail.Status, inDetail.Quantity, inDetail.IdInstantType, inDetail.IdRoomStatus\n" + 
+				"FROM RoomReservation AS rReserv \n" + 
+				"    LEFT JOIN RoomType AS rType\n" + 
+				"    ON rReserv.IdRoomType = rType.IdRoomType \n" + 
+				"    LEFT JOIN RoomStatus AS rStatus\n" + 
+				"    ON rReserv.IdRoomReservation = rStatus.IdRoomReservation \n" + 
+				"    LEFT JOIN InstantDetail inDetail on rStatus.RoomNumber = inDetail.RoomNumber\n" + 
+				"WHERE rReserv.IdCustomer = ? and rReserv.RoomReservationStatus = 1 and inDetail.Status <>1 and rReserv.RoomGroup = (select rr.RoomGroup\n" + 
+				"from RoomReservation rr left join RoomStatus rs on rr.IdRoomReservation = rs.IdRoomReservation\n" + 
+				"where rr.IdCustomer = ? and rs.RoomNumber = ? and rr.RoomReservationStatus = 1 )\n" + 
+				"ORDER BY rReserv.CheckInDate DESC";
 		List<Instant> instantList = new ArrayList<Instant>();
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME, Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, roomNumber);
+			ps.setInt(1, idCustomer);
+			ps.setInt(2, idCustomer);
+			ps.setString(3, roomNumber);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				int IdInstantDetail = rs.getInt(1), IdInstantService = rs.getInt(2), Status = rs.getInt(4), Quantity = rs.getInt(5), 

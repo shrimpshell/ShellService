@@ -7,10 +7,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import common.ChangeDate;
 import common.Common;
+import service.reservation.Reservation;
 
 
 
@@ -102,7 +104,8 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 		try {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
-			ps = connection.prepareStatement(sql);
+			connection.setAutoCommit(false);
+			ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, customer.getEmail());
 			ps.setString(2, customer.getName());
 			ps.setString(3, customer.getEmail());
@@ -111,7 +114,14 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 			ps.setDate(6, Date.valueOf(customer.getBirthday()));
 			ps.setString(7, customer.getPhone());
 			ps.setString(8, customer.getAddress());
-			count = ps.executeUpdate();
+			ps.executeUpdate();
+			// 回傳自動產生Id iOS 使用Alamofire會在reslut拿到
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+			// 寫入資料庫
+			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -133,7 +143,8 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	@Override
 	public int update(Customer customer) {
 		String sql = "UPDATE Customer "
-				+ "SET password = ?, phone = ?, address = ? "
+				+ "SET CustomerID = ?, Name = ?, Email = ?, password = ?, Gender = ?, "
+				+ "Birthday = ?, phone = ?, address = ? "
 				+ "WHERE idCustomer = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -142,10 +153,15 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, customer.getPassword());
-			ps.setString(2, customer.getPhone());
-			ps.setString(3, customer.getAddress());
-			ps.setInt(4, customer.getIdCustomer());
+			ps.setString(1, customer.getEmail());
+			ps.setString(2, customer.getName());
+			ps.setString(3, customer.getEmail());
+			ps.setString(4, customer.getPassword());
+			ps.setString(5, customer.getGender());
+			ps.setDate(6, Date.valueOf(customer.getBirthday()));
+			ps.setString(7, customer.getPhone());
+			ps.setString(8, customer.getAddress());
+			ps.setInt(9, customer.getIdCustomer());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
