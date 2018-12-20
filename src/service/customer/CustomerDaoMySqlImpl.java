@@ -143,7 +143,8 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 	@Override
 	public int update(Customer customer) {
 		String sql = "UPDATE Customer "
-				+ "SET password = ?, phone = ?, address = ? "
+				+ "SET CustomerID = ?, Name = ?, Email = ?, password = ?, Gender = ?, "
+				+ "Birthday = ?, phone = ?, address = ? "
 				+ "WHERE idCustomer = ?;";
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -152,10 +153,15 @@ public class CustomerDaoMySqlImpl implements CustomerDao {
 			connection = DriverManager.getConnection(Common.URL, Common.USERNAME,
 					Common.PASSWORD);
 			ps = connection.prepareStatement(sql);
-			ps.setString(1, customer.getPassword());
-			ps.setString(2, customer.getPhone());
-			ps.setString(3, customer.getAddress());
-			ps.setInt(4, customer.getIdCustomer());
+			ps.setString(1, customer.getEmail());
+			ps.setString(2, customer.getName());
+			ps.setString(3, customer.getEmail());
+			ps.setString(4, customer.getPassword());
+			ps.setString(5, customer.getGender());
+			ps.setDate(6, Date.valueOf(customer.getBirthday()));
+			ps.setString(7, customer.getPhone());
+			ps.setString(8, customer.getAddress());
+			ps.setInt(9, customer.getIdCustomer());
 			count = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
